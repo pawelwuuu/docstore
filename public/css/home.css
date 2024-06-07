@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    padding: 20px;
+    width: 80%;
+    margin: auto auto;
+}
+
+.documentCard {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.documentCard h4 {
+    margin-top: 0;
+}
+
+.documentCard p {
+    margin: 5px 0;
+}
+
+.blankLink {
+    text-decoration: none;
+    color: inherit;
+}
+
+.documentCard:hover {
+    transform: translateY(-1px); /* Przesunięcie karty o 5px w górę */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Dodanie delikatnego cienia */
+}
+
+.left {
+    width: 80%;
+    float: left;
+    margin-bottom: 80px;
+}
+
+.right {
+    width: 20%;
+    margin-top: 40px;
+    float: right;
+}

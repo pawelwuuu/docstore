@@ -1,0 +1,41 @@
+<head>
+    <title>DocStore</title>
+
+    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <link rel="stylesheet" type="text/css" href="css/partials.css">
+</head>
+<body>
+<%- include('partials/header.ejs') %>
+
+<div class="container">
+
+    <div class="left">
+        <h3>Dokumenty</h3>
+        <hr>
+        <% documents.forEach((doc) => { %>
+            <a href="/document/<%= doc.id %>" class="blankLink">
+                <div class="documentCard">
+                    <h4><%= doc.title %> <% doc.id %></h4>
+                    <p><strong>Opis:</strong> <%= doc.description %></p>
+                    <p><strong>Autor:</strong> <%= doc.author %></p>
+                    <p>Przesłał: <%= doc.username %></p>
+                </div>
+            </a>
+        <% }); %>
+    </div>
+
+    <div class="right">
+        <h4>Wyszukaj</h4>
+        <label for="titleInput">Tytuł</label>
+        <input id="titleInput" name="title">
+
+        <label for="authorInput">Autor</label>
+        <input id="authorInput" name="author">
+
+    </div>
+
+
+</div>
+
+<%- include('partials/footer.ejs') %>
+</body>
