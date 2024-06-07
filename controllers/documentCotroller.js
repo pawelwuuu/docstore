@@ -6,7 +6,6 @@ const createDocument = async (document) => {
         await db('documents').insert(document);
         return true;
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };
@@ -15,7 +14,6 @@ const findAllDocuments = async () => {
     try {
         return db('documents').select('*');
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };
@@ -24,7 +22,6 @@ const findDocumentByID = async (id) => {
     try {
         return db('documents').where('id', '=', id).first();
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };
@@ -55,7 +52,6 @@ const findDocumentByFiler = async (_filter) => {
         }
         return paginate(filter.perPage, filteredDocs.length, filter.page, filteredDocs);
     } catch (e) {
-        console.log(e);
         throw e;
     }
 }
@@ -70,7 +66,6 @@ const updateDocument = async (document, id) => {
         }
         return true;
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };
@@ -85,7 +80,6 @@ const deleteDocument = async (id) => {
         }
         return true;
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };

@@ -6,7 +6,6 @@ const createUser = async (user) => {
 
         return true;
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };
@@ -15,7 +14,6 @@ const findAllUsers = async () => {
     try {
         return db('users').select('*');
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };
@@ -25,7 +23,6 @@ const findUserByID = async (id) => {
     try {
         return db('users').where('id', '=', id).first()
     }catch (e) {
-        console.log(e)
         throw e
     }
 };
@@ -42,7 +39,6 @@ const updateUser = async (user, id) => {
 
         return true
     }catch (e) {
-        console.log(e)
         throw e
     }
 }
@@ -59,7 +55,6 @@ const deleteUser = async (id) => {
 
         return true
     }catch (e) {
-        console.log(e)
         throw e
     }
 }

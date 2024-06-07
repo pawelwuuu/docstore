@@ -5,7 +5,6 @@ const createComment = async (comment) => {
         await db('comments').insert(comment);
         return true;
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };
@@ -14,7 +13,6 @@ const findAllComments = async () => {
     try {
         return db('comments').select('*');
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };
@@ -23,7 +21,6 @@ const findCommentByID = async (id) => {
     try {
         return db('comments').where('id', '=', id).first();
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };
@@ -38,7 +35,6 @@ const updateComment = async (comment, id) => {
         }
         return true;
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };
@@ -53,7 +49,6 @@ const deleteComment = async (id) => {
         }
         return true;
     } catch (e) {
-        console.log(e);
         throw e;
     }
 };
