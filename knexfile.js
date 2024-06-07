@@ -3,7 +3,7 @@
  */
 const dotenv = require("dotenv");
 const path = require("node:path");
-dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 module.exports = {
 
@@ -15,9 +15,6 @@ module.exports = {
       password: process.env.DB_PASSWORD || '',
       database: process.env.DB_NAME,
     },
-    migrations: {
-      directory: './migrations'
-    }
   }
   ,
 
