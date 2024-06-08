@@ -2,8 +2,9 @@ const express = require('express')
 const dotenv = require('dotenv');
 const app = express()
 const path = require('node:path');
-const generalRouter = require(path.join(__dirname, '..', 'routes', 'generalRouter'));
+const mainRouter = require(path.join(__dirname, '..', 'routes', 'mainRouter'));
 const apiRouter = require(path.join(__dirname, '..', 'routes', 'apiRouter'));
+const authRouter = require(path.join(__dirname, '..', 'routes', 'authRouter'));
 const bodyParser = require('body-parser');
 const logger = require(path.join(__dirname,'..', 'middlewares', 'logger'))
 const errorHandler = require(path.join(__dirname,'..', 'middlewares', 'errorHandler'))
@@ -12,6 +13,9 @@ dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
 
 app.use(express.static(path.join(__dirname, '..', '..', 'public')));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 //ejs
 app.set('view engine', 'ejs');
@@ -22,8 +26,9 @@ app.use(logger);
 app.get('/err', async (req, res, next) => {
     next(new Error("cos sie stalo"))
 })
-app.use('/', generalRouter);
-app.use('/api', apiRouter);
+app.use(mainRouter);
+app.use(apiRouter);
+app.use(authRouter)
 
 app.use(errorHandler);
 
