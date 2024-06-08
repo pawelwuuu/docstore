@@ -7,6 +7,7 @@ exports.seed = function(knex) {
         const documents = [];
         for (let i = 0; i < 10; i++) {
           documents.push({
+              id: i+1,
             user_id: faker.datatype.number({min: 1, max: 10}),
             title: faker.lorem.words(),
             description: faker.lorem.sentence(),

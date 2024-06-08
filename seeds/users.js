@@ -12,7 +12,8 @@ exports.seed = function(knex) {
               {
                   id: j++,
                   username: faker.internet.userName(),
-                  email: faker.internet.email()
+                  email: faker.internet.email(),
+                  password: faker.internet.password(),
               });
         }
         return knex('users').insert(users);
