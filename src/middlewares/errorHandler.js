@@ -14,8 +14,9 @@ const errorHandler = async (error, req, res, next) => {
         console.log(error)
     }
 
+
     if (req.path === /\/api.*/) {
-        res.status(error.statusCode).send(error.message);
+        res.status(error.statusCode).send("Wystąpił błąd.");
     } else {
         res.status(error.statusCode).render('error', {err: error});
     }
