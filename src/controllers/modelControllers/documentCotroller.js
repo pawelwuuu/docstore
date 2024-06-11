@@ -1,4 +1,4 @@
-const db = require('../config/db')
+const db = require('../../config/db')
 
 const getOffset = (perPage, page) => {
     if (page <= 1) {
@@ -33,7 +33,7 @@ const findDocumentByID = async (id) => {
     }
 };
 
-const findDocumentByFiler = async (_filter) => {
+const findDocumentByFilter = async (_filter) => {
     try {
          const filter = {
             title: _filter.title ? `%${req.query.title}%` : '%',
@@ -103,4 +103,4 @@ const deleteDocument = async (id) => {
     }
 };
 
-module.exports = {createDocument, findAllDocuments, findDocumentByID, updateDocument, deleteDocument, findDocumentByFiler};
+module.exports = {createDocument, findAllDocuments, findDocumentByID, updateDocument, deleteDocument, findDocumentByFiler: findDocumentByFilter};

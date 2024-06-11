@@ -1,4 +1,4 @@
-const userController = require('../controllers/userController');
+const userController = require('../controllers/modelControllers/userController');
 const jwt = require('jsonwebtoken');
 const signInUser = (req, res, next) => {
     const token = req.cookies.jwt;

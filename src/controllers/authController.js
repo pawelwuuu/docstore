@@ -1,5 +1,5 @@
 const passwordOperations = require('../utils/passwordOperations');
-const userController = require('../controllers/userController');
+const userController = require('./modelControllers/userController');
 const jwt = require('jsonwebtoken');
 const {validatePassword, checkPassword} = require("../utils/passwordOperations");
 

@@ -1,4 +1,4 @@
-const documentController = require('./documentCotroller')
+const documentController = require('./modelControllers/documentCotroller')
 
 const documentsApi = async (req, res, next) => {
     try {
