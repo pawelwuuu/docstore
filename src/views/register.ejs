@@ -1,0 +1,11 @@
+<%- include('partials/header.ejs') %>
+
+<form method="post" action="/register">
+    login: <input type="text" name="username">
+    mail: <input type="text" name="email">
+    haslo: <input type="password" name="password">
+    <button type="submit">rejestruj</button>
+</form>
+<div id="register-error-wrapper"></div>
+
+<script src="js/auth/registerHandler.js"></script>

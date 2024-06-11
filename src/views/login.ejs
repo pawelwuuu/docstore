@@ -1,0 +1,10 @@
+<%- include('partials/header.ejs') %>
+
+<form method="post" action="/login">
+    email: <input type="text" name="email">
+    haslo: <input type="password" name="password">
+    <button type="submit">loguj mnie</button>
+</form>
+<div id="login-error-wrapper"></div>
+
+<script src="js/auth/loginHandler.js"></script>

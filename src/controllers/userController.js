@@ -2,9 +2,7 @@ const db = require('../config/db')
 
 const createUser = async (user) => {
     try {
-        await db('users').insert(user);
-
-        return true;
+        return await db('users').insert(user, 'id');
     } catch (e) {
         throw e;
     }
@@ -59,4 +57,12 @@ const deleteUser = async (id) => {
     }
 }
 
-module.exports = {createUser, findAllUsers, findUserByID, updateUser, deleteUser}
+const findUserByUsername = async (username) => {
+    return db('users').select('*').where('username', '=', username).first();
+}
+
+const findUserByEmail = async (email) => {
+    return db('users').select('*').where('email', '=', email).first();
+}
+
+module.exports = {createUser, findAllUsers, findUserByID, updateUser, deleteUser, findUserByUsername, findUserByEmail}
