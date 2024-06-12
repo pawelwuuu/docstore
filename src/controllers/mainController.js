@@ -1,6 +1,6 @@
 const documentController = require('./modelControllers/documentCotroller')
 
-const renderHomePage = async (req, res, next) => {
+const homeGET = async (req, res, next) => {
     try {
         const documents = await documentController.findDocumentByFiler({
             perPage: 5,
@@ -13,7 +13,7 @@ const renderHomePage = async (req, res, next) => {
     }
 };
 
-const renderDocumentPage = async (req, res, next) => {
+const documentGet = async (req, res, next) => {
     try {
         const doc = await documentController.findDocumentByFiler({
             id: req.params.id,
@@ -25,4 +25,4 @@ const renderDocumentPage = async (req, res, next) => {
     }
 };
 
-module.exports = {renderHomePage, renderDocumentPage}
+module.exports = {renderHomePage: homeGET, renderDocumentPage: documentGet}

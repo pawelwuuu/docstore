@@ -1,6 +1,6 @@
 const express = require('express');
 const mainRouter = express.Router();
-const renderController = require('../controllers/renderController')
+const renderController = require('../controllers/mainController')
 
 mainRouter.get('/', renderController.renderHomePage)
 
