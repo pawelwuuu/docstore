@@ -65,4 +65,8 @@ const findUserByEmail = async (email) => {
     return db('users').select('*').where('email', '=', email).first();
 }
 
-module.exports = {createUser, findAllUsers, findUserByID, updateUser, deleteUser, findUserByUsername, findUserByEmail}
+const findUserByLogin = async (login) => {
+    return db('users').select('*').where('email', '=', login).orWhere('username', '=', login).first();
+}
+
+module.exports = {createUser, findAllUsers, findUserByID, updateUser, deleteUser, findUserByUsername, findUserByEmail, findUserByLogin}

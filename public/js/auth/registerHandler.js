@@ -12,7 +12,6 @@ form.addEventListener('submit', async (e) => {
             body: JSON.stringify({username, email, password}),
             headers: {'Content-Type': 'application/json'}
         });
-        document.getElementById('register-error-wrapper').innerText = "";
 
         if (res.status >= 300) {
             const resultJson = await res.json();

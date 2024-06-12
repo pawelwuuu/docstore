@@ -1,7 +1,6 @@
 const passwordOperations = require('../utils/passwordOperations');
 const userController = require('./modelControllers/userController');
 const jwt = require('jsonwebtoken');
-const {validatePassword, checkPassword} = require("../utils/passwordOperations");
 
 const createToken = async (id) => {
     return jwt.sign({id}, process.env.JWT_SECRET, {
@@ -36,8 +35,8 @@ const validateRegisterData = async (username, email, password) => {
     return true;
 }
 
-const validateLoginData = async (email, password) => {
-    const user = await userController.findUserByEmail(email);
+const validateLoginData = async (login, password) => {
+    const user = await userController.findUserByLogin(login);
 
     if (user) {
         if(await passwordOperations.checkPassword(password, user.password)) {
@@ -100,7 +99,7 @@ const loginPost = async (req, res, next) => {
 
         const validateResult = await validateLoginData(email, password);
         if (validateResult === true) {
-            const user = await userController.findUserByEmail(email);
+            const user = await userController.findUserByLogin(email);
 
             res.cookie('jwt', await createToken(user.id), {httpOnly:true, maxAge: parseInt(process.env.JWT_EXPIRE_TIME) * 1000 || 86400000});
             res.status(201).json({
