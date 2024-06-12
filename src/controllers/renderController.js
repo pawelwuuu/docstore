@@ -2,7 +2,10 @@ const documentController = require('./modelControllers/documentCotroller')
 
 const renderHomePage = async (req, res, next) => {
     try {
-        const documents = await documentController.findDocumentByFiler({})
+        const documents = await documentController.findDocumentByFiler({
+            perPage: 5,
+            page: 1
+        })
 
         res.render('home', {documents: documents});
     } catch (e) {
@@ -10,11 +13,13 @@ const renderHomePage = async (req, res, next) => {
     }
 };
 
-const renderDocumentPage = async (req, res, e) => {
+const renderDocumentPage = async (req, res, next) => {
     try {
-        const doc = await documentController.findDocumentByID(req.params.id);
+        const doc = await documentController.findDocumentByFiler({
+            id: req.params.id,
+        });
 
-        res.render('document', {doc: doc});
+        res.render('document', {doc: doc[0]});
     } catch (e) {
         next(e)
     }
