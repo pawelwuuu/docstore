@@ -2,7 +2,7 @@ const db = require('../../config/db')
 
 const createUser = async (user) => {
     try {
-        return await db('users').insert(user, 'id');
+        return await db('users').insert(user, 'id').returning('id');
     } catch (e) {
         throw e;
     }
