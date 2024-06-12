@@ -10,8 +10,7 @@ const getOffset = (perPage, page) => {
 
 const createDocument = async (document) => {
     try {
-        await db('documents').insert(document);
-        return true;
+        await db('documents').insert(document).returning('id');
     } catch (e) {
         throw e;
     }

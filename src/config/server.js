@@ -10,15 +10,18 @@ const logger = require(path.join(__dirname,'..', 'middlewares', 'logger'));
 const authMiddleware = require(path.join(__dirname, '..', 'middlewares', 'authMiddleware'));
 const errorHandler = require(path.join(__dirname,'..', 'middlewares', 'errorHandler'));
 const cookieParser = require('cookie-parser')
+const fileUpload = require('express-fileupload');
 
 dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
 
 app.use(express.static(path.join(__dirname, '..', '..', 'public')));
+app.use(fileUpload());
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
 
 //ejs
 app.set('view engine', 'ejs');

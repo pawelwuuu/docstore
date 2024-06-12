@@ -1,0 +1,20 @@
+<body>
+<div class="form-container">
+    <h2>Dodaj Dokument</h2>
+    <form action="/add-document" method="POST" encType="multipart/form-data">
+        <label for="title">Tytuł</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="description">Opis</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+
+        <label for="author">Autor</label>
+        <input type="text" id="author" name="author" required>
+
+        <label for="file">Plik</label>
+        <input type="file" id="file" name="documentFile" required>
+
+        <button type="submit">Dodaj Dokument</button>
+    </form>
+</div>
+</body>

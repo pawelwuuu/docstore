@@ -52,7 +52,7 @@ const validateLoginData = async (login, password) => {
 
 const registerGet = async (req, res, next) => {
     try {
-        res.render('register');
+        res.render('auth/register');
     } catch (e) {
         next(e);
     }
@@ -87,7 +87,7 @@ const registerPost = async (req, res, next) => {
 
 const loginGet = async (req, res, next) => {
     try {
-        res.render('login');
+        res.render('auth/login');
     } catch (e) {
         next(e);
     }

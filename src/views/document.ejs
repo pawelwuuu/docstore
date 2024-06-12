@@ -13,6 +13,7 @@
 <p>Autor: <%= doc.author %></p>
 <p>Dodano: <%= new Date(doc.uploaded_at).toLocaleDateString() %></p>
 <p>Użytkownik: <%= doc.username %></p>
-<p><a href="/uploads/<%= doc.filename %>">Pobierz plik</a></p>
+<p><a href="/uploads/<%= doc.filename %>" download="<%= doc.title.replaceAll(' ', '_') + "." + doc.file_ext %>">Pobierz plik</a></p>
+
 </body>
 </html>
