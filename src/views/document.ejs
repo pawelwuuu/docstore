@@ -1,13 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Document</title>
-
-    <link rel="stylesheet" type="text/css" href="../css/partials.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= doc.title %></title>
 </head>
 <body>
 <%- include('partials/header.ejs') %>
 
-
-
-
-<%- include('partials/footer.ejs') %>
+<h1><%= doc.title %></h1>
+<p><%= doc.description %></p>
+<p>Autor: <%= doc.author %></p>
+<p>Dodano: <%= new Date(doc.uploaded_at).toLocaleDateString() %></p>
+<p>Użytkownik: <%= doc.username %></p>
+<p><a href="/uploads/<%= doc.filename %>">Pobierz plik</a></p>
 </body>
+</html>
