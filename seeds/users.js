@@ -1,4 +1,6 @@
 const faker = require('faker');
+const bcrypt = require('bcrypt')
+
 
 exports.seed = function(knex) {
   // Deletes ALL existing entries
@@ -16,6 +18,12 @@ exports.seed = function(knex) {
                   password: faker.internet.password(),
               });
         }
+
+        users.push ({
+            username: 'test',
+            email: 'test@test.pl',
+            password: bcrypt.hashSync('test', 11)
+        })
         return knex('users').insert(users);
       });
 };
