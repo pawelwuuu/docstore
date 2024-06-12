@@ -36,10 +36,12 @@ const findDocumentByID = async (id) => {
 const findDocumentByFilter = async (_filter) => {
     try {
          const filter = {
-            title: _filter.title ? `%${req.query.title}%` : '%',
-            description: _filter.description ? `%${req.query.description}%` : '%',
-            author: _filter.author ? `${req.query.author}%` : '%',
-            uploadedBy: _filter.uploadedBy ? `${req.query.uploadedBy}%` : '%',
+            id: _filter.id ? `${_filter.id}` : '%',
+            title: _filter.title ? `%${_filter.title}%` : '%',
+            description: _filter.description ? `%${_filter.description}%` : '%',
+            author: _filter.author ? `${_filter.author}%` : '%',
+            uploadedBy: _filter.uploadedBy ? `${_filter.uploadedBy}%` : '%',
+            uploadedAt: _filter.uploadedAt ? `%${_filter.uploadedAt}%` : '%',
             orderBy: _filter.orderBy || 'uploaded_at',
             orderType: _filter.orderType || 'asc',
             perPage: parseInt(_filter.perPage) || -1,
@@ -48,20 +50,24 @@ const findDocumentByFilter = async (_filter) => {
 
         let filteredDocs;
         if (filter.perPage === -1) {
-            filteredDocs = await db('documents').select('documents.id','title', 'description', 'author', 'uploaded_at', 'users.username')
+            filteredDocs = await db('documents').select('documents.*', 'users.username')
                 .join('users', 'users.id', 'documents.user_id')
+                .whereLike('documents.id', filter.id)
+                .whereILike('uploaded_at', filter.uploadedAt)
                 .whereILike('title', filter.title)
                 .whereILike('description', filter.description)
                 .whereILike('author', filter.author)
                 .whereILike('users.username', filter.uploadedBy)
                 .orderBy(filter.orderBy, filter.orderType);
         } else if (filter.perPage > 0) {
-            filteredDocs = await db('documents').select('documents.id','title', 'description', 'author', 'uploaded_at', 'users.username')
+            filteredDocs = await db('documents').select('documents.*','users.username')
                 .join('users', 'users.id', 'documents.user_id')
                 .whereILike('title', filter.title)
                 .whereILike('description', filter.description)
                 .whereILike('author', filter.author)
                 .whereILike('users.username', filter.uploadedBy)
+                .whereLike('documents.id', filter.id)
+                .whereLike('uploaded_at', filter.uploadedAt)
                 .orderBy(filter.orderBy, filter.orderType)
                 .offset(getOffset(filter.perPage, filter.page))
                 .limit(filter.perPage);

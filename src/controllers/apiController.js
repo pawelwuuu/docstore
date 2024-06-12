@@ -3,17 +3,25 @@ const documentController = require('./modelControllers/documentCotroller')
 const documentsApi = async (req, res, next) => {
     try {
         const filters = {
+            id: req.query.id,
             title: req.query.title,
             description: req.query.description,
             author: req.query.author,
             uploadedBy: req.query.uploadedBy,
+            uploadedAt: req.query.uploadedAt,
             orderBy: req.query.orderBy,
             orderType: req.query.orderType,
             perPage: req.query.perPage,
             page: req.query.page
         };
 
-        res.json(await documentController.findDocumentByFiler(filters))
+        const filteredDocs = await documentController.findDocumentByFiler(filters)
+        const filteredDocsWoutFilename = filteredDocs.map((doc) => {
+            const { filename, ...rest } = doc;
+            return rest;
+        });
+
+        res.json(filteredDocsWoutFilename)
     } catch (e) {
         next(e)
     }
