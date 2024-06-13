@@ -10,7 +10,7 @@ const signInUser = (req, res, next) => {
                 next(err);
             } else {
                 let user = await userController.findUserByID(decodedToken.id);
-                delete user.password;
+                delete user?.password;
 
                 res.locals.user = user;
                 next();
