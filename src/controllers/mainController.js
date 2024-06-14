@@ -1,43 +1,9 @@
 const documentController = require('./modelControllers/documentCotroller');
+const categoryController = require('./modelControllers/categoryController');
 const path = require('node:path');
-const _fileType = import('file-type');
-const allowedDocExt = require('../utils/allowedDocExt');
 const _uniqueString = import('unique-string');
-
-const validateDocumentData = async (title, description, author, fileBuffer) => {
-    const errors = {};
-
-    if (!title || typeof title !== 'string' || title.trim() === '') {
-        errors.title = 'Tytuł jest wymagany i musi być tekstem.';
-    } else if (title.length > 255) {
-        errors.title = 'Tytuł nie może być dłuższy niż 255 znaków.';
-    }
-
-    if (!description || typeof description !== 'string' || description.trim() === '') {
-        errors.description = 'Opis jest wymagany i musi być tekstem.';
-    } else if (description.length > 1000) {
-        errors.description = 'Opis nie może być dłuższy niż 1000 znaków.';
-    }
-
-    if (!author || typeof author !== 'string' || author.trim() === '') {
-        errors.author = 'Autor jest wymagany i musi być tekstem.';
-    } else if (author.length > 255) {
-        errors.author = 'Autor nie może być dłuższy niż 255 znaków.';
-    }
-
-    const fileType = await _fileType;
-    const fileExtension = await fileType.fileTypeFromBuffer(fileBuffer);
-    if (! allowedDocExt.includes("." + fileExtension.ext)) {
-        errors.file = 'Ten typ pliku jest niedozwolony.';
-    }
-
-    return {
-        isValid: Object.keys(errors).length === 0,
-        fileExtension: fileExtension.ext,
-        errors
-    };
-}
-
+const validation = require('../utils/validation');
+const filleOperations = require('../utils/fileOperations');
 
 const homeGET = async (req, res, next) => {
     try {
@@ -59,7 +25,7 @@ const documentGET = async (req, res, next) => {
             id: req.params.id,
         });
 
-        res.render('document', {doc: doc[0]});
+        res.render('document/document', {doc: doc[0]});
     } catch (e) {
         next(e)
     }
@@ -67,7 +33,9 @@ const documentGET = async (req, res, next) => {
 
 const addDocumentGET = async (req, res, next) => {
     try {
-        res.render('add_document')
+        const categories = await categoryController.findAllCategories();
+
+        res.render('document/add_document', {categories})
     } catch (e) {
         next(e);
     }
@@ -75,7 +43,7 @@ const addDocumentGET = async (req, res, next) => {
 
 const addDocumentPOST = async (req, res, next) => {
     try {
-        const {title, description, author} = req.body
+        const {title, description, author, category} = req.body
 
         let uploadedFile = null
         if (req.files) {
@@ -87,10 +55,10 @@ const addDocumentPOST = async (req, res, next) => {
             return;
         }
 
-        const validationResult = await validateDocumentData(title, description, author, uploadedFile.data)
+        const validationResult = await validation.validateAddDocData(title, description, author, category, uploadedFile.data)
         if (validationResult.isValid === true) {
             const uniqueString = await _uniqueString;
-            const uniqueFilename = uniqueString.default()
+            const uniqueFilename = `${uniqueString.default()}.${validationResult.fileExtension}`;
             await uploadedFile.mv(path.join(__dirname, '..', '..', 'public', 'uploads', uniqueFilename));
 
             const document = {
@@ -101,9 +69,7 @@ const addDocumentPOST = async (req, res, next) => {
                 filename: uniqueFilename,
                 file_ext: validationResult.fileExtension
             }
-            await documentController.createDocument(document);
-
-
+            await documentController.createDocument(document, category);
 
             res.json(validationResult);
         } else {
@@ -114,4 +80,76 @@ const addDocumentPOST = async (req, res, next) => {
     }
 }
 
-module.exports = {homeGET, documentGET, addDocumentGET, addDocumentPOST}
+const documentDELETE = async (req,res,next) => {
+    try {
+        const documentId = req.params.id;
+        const originalDocument = await documentController.findDocumentByID(documentId);
+
+        const result = await documentController.deleteDocument(documentId);
+        if (result === true) {
+            res.send('Dokument został usunięty.')
+
+            await filleOperations.moveFile(
+                path.join(__dirname, '..', '..', 'public', 'uploads', originalDocument.filename),
+                path.join(__dirname, '..', '..', 'data', 'archives', originalDocument.filename)
+            );
+        }
+    } catch (e) {
+        next(e)
+    }
+}
+
+const editDocumentGET = async (req,res,next) => {
+    try {
+        const categories = await categoryController.findAllCategories();
+        const documentId = req.params.id;
+        const document = await documentController.findDocumentByID(documentId);
+
+        res.render('document/edit_document', {categories, document})
+    } catch (e) {
+        next(e);
+    }
+}
+
+const editDocumentPOST = async (req,res,next) => {
+    try {
+        const {title, description, author, category} = req.body
+        const documentId = req.params.id;
+        const originalDocument = await documentController.findDocumentByID(documentId);
+
+        let uploadedFile = req.files?.documentFile || null;
+
+        const validationResult = await validation.validateEditDocData(title, description, author, category, uploadedFile?.data)
+        if (validationResult.isValid === true) {
+            let uniqueFilename
+            if (req.files?.documentFile) {
+                const uniqueString = await _uniqueString;
+                uniqueFilename = uniqueString.default()
+                await uploadedFile.mv(path.join(__dirname, '..', '..', 'public', 'uploads', uniqueFilename));
+
+                await filleOperations.moveFile(
+                    path.join(__dirname, '..', '..', 'public', 'uploads', originalDocument.filename),
+                    path.join(__dirname, '..', '..', 'data', 'archives', originalDocument.filename)
+                );
+            }
+
+            const document = {
+                title,
+                description,
+                author,
+                filename: uniqueFilename || originalDocument.filename,
+                file_ext: validationResult.fileExtension || originalDocument.file_ext,
+            }
+            await documentController.updateDocument(document, documentId);
+
+            res.json(validationResult);
+        } else {
+            res.status(422).json(validationResult)
+        }
+    } catch (e) {
+        next(e);
+    }
+}
+
+
+module.exports = {homeGET, documentGET, addDocumentGET, addDocumentPOST, documentDELETE, editDocumentGET, editDocumentPOST}

@@ -14,6 +14,6 @@ exports.up = function(knex) {
  */
 exports.down = function(knex) {
     return knex.schema.table('documents', (table) => {
-        table.dropColumn('uploaded_at')
+        table.date('uploaded_at').alter()
     })
 };

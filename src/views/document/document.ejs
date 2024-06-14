@@ -6,7 +6,7 @@
     <title><%= doc.title %></title>
 </head>
 <body>
-<%- include('partials/header.ejs') %>
+<%- include('../partials/header.ejs') %>
 
 <h1><%= doc.title %></h1>
 <p><%= doc.description %></p>
@@ -15,5 +15,11 @@
 <p>Użytkownik: <%= doc.username %></p>
 <p><a href="/uploads/<%= doc.filename %>" download="<%= doc.title.replaceAll(' ', '_') + "." + doc.file_ext %>">Pobierz plik</a></p>
 
+<% if (user?.username === doc.username) { %>
+    <a href="/edit-document/<%= doc.id %>">Edytuj</a>
+    <a href="/delete-document/<%= doc.id %>" id="delete-document-link">Usuń</a>
+    <script src="/js/deleteDocumentHandler.js"></script>
+<% } %>
 </body>
+
 </html>

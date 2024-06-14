@@ -8,11 +8,27 @@ const getOffset = (perPage, page) => {
     }
 }
 
-const createDocument = async (document) => {
+const createDocument = async (document, categoriesIds) => {
     try {
-        await db('documents').insert(document).returning('id');
-    } catch (e) {
-        throw e;
+        await db.transaction(async (trx) => {
+            const documentId = await trx('documents').insert(
+                document,
+                'id'
+            );
+
+            const documentCategories = [];
+            categoriesIds.forEach((categoryId) => {
+                documentCategories.push({category_id: categoryId, document_id: documentId})
+            });
+
+            await trx('document_category').insert(
+                documentCategories
+            );
+
+            return documentId;
+        });
+    } catch (error) {
+        throw error;
     }
 };
 

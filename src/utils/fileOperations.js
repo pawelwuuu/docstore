@@ -11,4 +11,10 @@ const appendToFile = async (str, filename) => {
    })
 }
 
-module.exports = {appendToFile}
+const moveFile = async (from, to) => {
+    await fs.rename(from, to, (err) => {
+       console.log(err);
+    });
+}
+
+module.exports = {appendToFile, moveFile}

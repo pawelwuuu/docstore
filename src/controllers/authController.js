@@ -1,53 +1,12 @@
 const passwordOperations = require('../utils/passwordOperations');
 const userController = require('./modelControllers/userController');
 const jwt = require('jsonwebtoken');
+const validation = require('../utils/validation');
 
 const createToken = async (id) => {
     return jwt.sign({id}, process.env.JWT_SECRET, {
         expiresIn: parseInt(process.env.JWT_EXPIRE_TIME) || 86400
     });
-}
-
-const validateRegisterData = async (username, email, password) => {
-    // walidacja nicku
-    if (! (/^[a-zA-Z0-9_]{3,20}$/).test(username)) {
-        return "Nazwa jest zbyt krótka lub zawiera niedozwolone znaki.";
-    }
-    if (await userController.findUserByUsername(username)) {
-        return "Ta nazwa użytkownika jest już zajęta.";
-    }
-
-    // walidacja maila
-    if (! email.match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    )) {
-        return "Niepoprawny format email.";
-    }
-    if (await userController.findUserByEmail(email)) {
-        return "Konto o podanym mailu istnieje już w serwisie.";
-    }
-
-    // haslo
-    if (! await passwordOperations.validatePassword(password)) {
-        return "Hasło nie spełnia wymogów";
-    }
-
-    return true;
-}
-
-const validateLoginData = async (login, password) => {
-    const user = await userController.findUserByLogin(login);
-
-    if (user) {
-        if(await passwordOperations.checkPassword(password, user.password)) {
-            return true;
-        } else {
-            return 'Hasło niepoprawne.'
-        }
-
-    } else {
-        return 'Użytkownik o podanym mailu nie istnieje.';
-    }
 }
 
 const registerGet = async (req, res, next) => {
@@ -62,7 +21,7 @@ const registerPost = async (req, res, next) => {
     try {
         const {username, email, password} = req.body;
 
-        const validateResult = await validateRegisterData(username, email, password);
+        const validateResult = await validation.validateRegisterData(username, email, password);
         if (validateResult === true) {
             const userId = await userController.createUser(
                 {
@@ -97,7 +56,7 @@ const loginPost = async (req, res, next) => {
     try {
         const {email, password} = req.body;
 
-        const validateResult = await validateLoginData(email, password);
+        const validateResult = await validation.validateLoginData(email, password);
         if (validateResult === true) {
             const user = await userController.findUserByLogin(email);
 

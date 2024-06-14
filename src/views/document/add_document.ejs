@@ -14,6 +14,12 @@
         <label for="file">Plik</label>
         <input type="file" id="file" name="documentFile" required>
 
+        <label for="category">Kategoria dokumentu</label>
+        <% categories.forEach((category) => { %>
+            <input type="checkbox" value="<%= category.id %>" name="category">
+            <%= category.category_name %>
+        <% }); %>
+
         <button type="submit">Dodaj Dokument</button>
     </form>
 </div>

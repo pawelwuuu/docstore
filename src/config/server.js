@@ -11,6 +11,7 @@ const authMiddleware = require(path.join(__dirname, '..', 'middlewares', 'authMi
 const errorHandler = require(path.join(__dirname,'..', 'middlewares', 'errorHandler'));
 const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload');
+const connectToDatabase = require('../config/db')
 
 dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
 
@@ -38,9 +39,9 @@ app.use(authRouter)
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log("Server is running on port " + PORT);
-})
+});
 
 module.exports = app

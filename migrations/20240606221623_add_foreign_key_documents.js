@@ -3,8 +3,6 @@ exports.up = async function(knex) {
         table.integer('user_id').notNullable().unsigned().alter()
         table.foreign('user_id').references('users.id').onDelete('CASCADE').onUpdate('CASCADE')
     });
-
-
 };
 
 exports.down = function(knex) {

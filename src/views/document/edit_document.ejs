@@ -1,0 +1,26 @@
+<body>
+<div class="form-container">
+    <h2>Edytuj Dokument</h2>
+    <form action="/edit-document/<%= document.id %>" method="post" encType="multipart/form-data">
+        <label for="title">Tytuł</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="description">Opis</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+
+        <label for="author">Autor</label>
+        <input type="text" id="author" name="author" required>
+
+        <label for="file">Plik</label>
+        <input type="file" id="file" name="documentFile">
+
+        <label for="category">Kategoria dokumentu</label>
+        <% categories.forEach((category) => { %>
+            <input type="checkbox" value="<%= category.id %>" name="category">
+            <%= category.category_name %>
+        <% }); %>
+
+        <button type="submit">Edytuj dokument</button>
+    </form>
+</div>
+</body>
