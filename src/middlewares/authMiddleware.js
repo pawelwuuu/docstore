@@ -1,4 +1,5 @@
 const userController = require('../controllers/modelControllers/userController');
+const documentController = require('../controllers/modelControllers/documentCotroller');
 const jwt = require('jsonwebtoken');
 const signInUser = (req, res, next) => {
     const token = req.cookies.jwt;
@@ -22,5 +23,21 @@ const signInUser = (req, res, next) => {
     }
 };
 
+const ensureDocumentAccess = async (req, res, next) => {
+    try {
+        const documentId = req.params.id;
+        const document = await documentController.findDocumentByID(documentId);
+        if (res.locals.user && res.locals.user.id === document.user_id) {
+            next()
+        } else {
+            const err = new Error("Brak dostępu.");
+            err.userMsg = "Brak dostępu, zaloguj się aby rozwiązać ten problem."
 
-module.exports = {signInUser}
+            throw err;
+        }
+    } catch (e) {
+        next(e);
+    }
+}
+
+module.exports = {signInUser, ensureDocumentAccess}
