@@ -96,15 +96,25 @@ const findDocumentByFilter = async (_filter) => {
     }
 }
 
-const updateDocument = async (document, id) => {
+const updateDocument = async (document, id, categoriesIds) => {
     try {
-        const existingDocument = await findDocumentByID(id);
-        if (existingDocument) {
-            await db('documents').where('id', '=', id).update(document);
-        } else {
-            throw new Error(`Document not found while updating for id ${id}`);
-        }
-        return true;
+        await db.transaction(async (trx) => {
+            const existingDocument = await findDocumentByID(id);
+
+            const documentCategories = [];
+            categoriesIds.forEach((categoryId) => {
+                documentCategories.push({category_id: categoryId, document_id: existingDocument.id})
+            });
+
+            if (existingDocument) {
+                await trx('documents').where('id', '=', id).update(document);
+                await trx('document_category').delete().where('document_id', existingDocument.id);
+                await trx('document_category').insert(documentCategories);
+
+            } else {
+                throw new Error(`Document not found while updating for id ${id}`);
+            }
+        });
     } catch (e) {
         throw e;
     }

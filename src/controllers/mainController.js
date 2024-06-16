@@ -120,7 +120,8 @@ const editDocumentGET = async (req,res,next) => {
 
 const editDocumentPOST = async (req,res,next) => {
     try {
-        const {title, description, author, category} = req.body
+        let {title, description, author, category} = req.body
+        category = category ? [...category] : [];
         const documentId = req.params.id;
         const originalDocument = await documentController.findDocumentByID(documentId);
 
@@ -147,7 +148,7 @@ const editDocumentPOST = async (req,res,next) => {
                 filename: uniqueFilename || originalDocument.filename,
                 file_ext: validationResult.fileExtension || originalDocument.file_ext,
             }
-            await documentController.updateDocument(document, documentId);
+            await documentController.updateDocument(document, documentId, category);
 
             res.json(validationResult);
         } else {
