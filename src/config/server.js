@@ -38,6 +38,12 @@ app.use(authRouter)
 
 app.use(errorHandler);
 
+process.on('uncaughtException', (err) => {
+    console.log('\x1b[41m\x1b[37m%s\x1b[0m', `Uncaught error occurred ${err}`);
+    console.log('\x1b[41m\x1b[37m%s\x1b[0m', err);
+})
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log("Server is running on port " + PORT);
