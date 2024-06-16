@@ -19,7 +19,7 @@
         <p><a href="/uploads/<%= doc.filename %>" download="<%= doc.title.replaceAll(' ', '_') + '.' + doc.file_ext %>">Pobierz plik</a></p>
     </article>
 
-    <% if (user?.username === doc.username) { %>
+    <% if (user?.username === doc.username || user?.is_admin === 1) { %>
         <div class="document-actions">
             <a href="/edit-document/<%= doc.id %>" class="action-link">Edytuj</a>
             <a href="/delete-document/<%= doc.id %>" id="delete-document-link" class="action-link">Usuń</a>

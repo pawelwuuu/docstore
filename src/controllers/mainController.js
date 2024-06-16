@@ -1,6 +1,7 @@
 const documentController = require('./modelControllers/documentCotroller');
 const categoryController = require('./modelControllers/categoryController');
 const documentCategoryController = require('./modelControllers/documentsCategoryController');
+const userController = require('./modelControllers/userController');
 const path = require('node:path');
 const _uniqueString = import('unique-string');
 const validation = require('../utils/validation');
@@ -159,5 +160,45 @@ const editDocumentPOST = async (req,res,next) => {
     }
 }
 
+const userDELETE = async (req, res, next) => {
+    try {
+        const userId = req.params.id;
+        const result = await userController.deleteUser(userId);
 
-module.exports = {homeGET, documentGET, addDocumentGET, addDocumentPOST, documentDELETE, editDocumentGET, editDocumentPOST}
+        if (result === true) {
+            res.json('Użytkownik usunięty');
+        } else {
+            const err = new Error();
+            err.userMsg = "Nie udało się usunąć konta."
+            throw err;
+        }
+    } catch (e) {
+        next(e);
+    }
+}
+
+const filterDocuments = async (req, res, next) => {
+    try {
+        const filters = {
+            id: req.query.id,
+            title: req.query.title,
+            description: req.query.description,
+            author: req.query.author,
+            uploadedBy: req.query.uploadedBy,
+            uploadedAt: req.query.uploadedAt,
+            orderBy: req.query.orderBy,
+            orderType: req.query.orderType,
+            perPage: req.query.perPage,
+            page: req.query.page
+        };
+
+        const filteredDocs = await documentController.findDocumentByFiler(filters);
+
+        res.render('document/filtered_documents', {documents: filteredDocs})
+    } catch (e) {
+        next(e);
+    }
+}
+
+module.exports = {homeGET, documentGET, addDocumentGET, addDocumentPOST, documentDELETE, editDocumentGET,
+    editDocumentPOST, userDELETE, filterDocuments}

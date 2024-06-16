@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administratora - Użytkownicy</title>
+    <link rel="stylesheet" type="text/css" href="/css/admin_users.css">
+</head>
+<body>
+<%- include('../partials/header.ejs') %>
+<div class="admin-container">
+    <div class="sidebar">
+        <%- include('../partials/admin_panel.ejs') %>
+    </div>
+    <div class="main-content">
+        <h3>Wszyscy użytkownicy</h3>
+        <div class="users-list">
+            <% users.forEach(user => { %>
+                <div class="user-item">
+                    <p><strong>ID:</strong> <%= user.id %></p>
+                    <p><strong>Nazwa użytkownika:</strong> <%= user.username %></p>
+                    <p><strong>Email:</strong> <%= user.email %></p>
+                    <p><strong>Administrator:</strong> <%= user.is_admin === 1 ? "Tak" : "Nie"; %></p>
+                    <p><strong>Konto zablokowane:</strong> <%= user.is_banned === 1 ? "Tak" : "Nie"; %></p>
+                    <p><strong>Utworzony:</strong> <%= new Date(user.created_at).toLocaleDateString() %></p>
+                    <p><strong>Ostatnia aktualizacja:</strong> <%= new Date(user.updated_at).toLocaleDateString() %></p>
+                    <a><button onclick="deleteUser(<%= user.id%>)">Usuń</button></a>
+
+                    <% if(user.is_banned === 0) { %>
+                        <a href="/admin/ban/<%= user.id%>"><button>Zablokuj</button></a>
+                    <% } else { %>
+                        <a href="/admin/unban/<%= user.id%>"><button>Odblokuj</button></a>
+                    <% } %>
+
+                    <% if(user.is_admin === 0) { %>
+                        <a href="/admin/grant/<%= user.id%>"><button>Nadaj uprawnienia</button></a>
+                    <% } else { %>
+                        <a href="/admin/revoke/<%= user.id%>"><button>Odbierz uprawnienia</button></a>
+                    <% } %>
+
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</div>
+<%- include('../partials/popup.ejs') %>
+<%- include('../partials/footer.ejs') %>
+<script src="/js/deleteUser.js"></script>
+</body>
+</html>

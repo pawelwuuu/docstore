@@ -13,8 +13,14 @@ const signInUser = (req, res, next) => {
                 let user = await userController.findUserByID(decodedToken.id);
                 delete user?.password;
 
-                res.locals.user = user;
-                next();
+                if (user.is_banned === 0) {
+                    res.locals.user = user;
+                    next();
+                } else {
+                    const error = new Error();
+                    error.userMsg = 'Twoje konto jest zablokowane.';
+                    next(error)
+                }
             }
         });
     } else {
@@ -27,11 +33,11 @@ const ensureDocumentAccess = async (req, res, next) => {
     try {
         const documentId = req.params.id;
         const document = await documentController.findDocumentByID(documentId);
-        if (res.locals.user && res.locals.user.id === document.user_id) {
+        if (res.locals.user && res.locals.user.id === document.user_id || res.locals.user.is_admin === 1) {
             next()
         } else {
             const err = new Error("Brak dostępu.");
-            err.userMsg = "Brak dostępu, zaloguj się aby rozwiązać ten problem."
+            err.userMsg = "Brak dostępu, zaloguj się aby rozwiązać ten problem.";
 
             throw err;
         }
@@ -40,4 +46,20 @@ const ensureDocumentAccess = async (req, res, next) => {
     }
 }
 
-module.exports = {signInUser, ensureDocumentAccess}
+const ensureAdminAccess = async  (req, res, next) => {
+    try {
+        const loggedUser = res.locals.user
+        if (loggedUser.is_admin === 1) {
+            next();
+        } else {
+            const err = new Error("Brak dostępu.");
+            err.userMsg = "Brak dostępu, zaloguj się aby rozwiązać ten problem.";
+
+            throw err;
+        }
+    } catch (e) {
+        next(e);
+    }
+}
+
+module.exports = {signInUser, ensureDocumentAccess, ensureAdminAccess}

@@ -1,7 +1,7 @@
 const express = require('express');
 const mainRouter = express.Router();
 const mainController = require('../controllers/mainController');
-const {ensureDocumentAccess} = require('../middlewares/authMiddleware');
+const {ensureDocumentAccess, ensureAdminAccess} = require('../middlewares/authMiddleware');
 
 mainRouter.get('/', mainController.homeGET);
 
@@ -11,10 +11,16 @@ mainRouter.get('/add-document', mainController.addDocumentGET);
 
 mainRouter.post('/add-document', mainController.addDocumentPOST);
 
-mainRouter.delete('/delete-document/:id', ensureDocumentAccess, mainController.documentDELETE)
+mainRouter.delete('/delete-document/:id', ensureDocumentAccess, mainController.documentDELETE);
 
-mainRouter.get('/edit-document/:id', ensureDocumentAccess, mainController.editDocumentGET)
+mainRouter.get('/delete-document/:id', ensureDocumentAccess, mainController.documentDELETE);
 
-mainRouter.post('/edit-document/:id', ensureDocumentAccess, mainController.editDocumentPOST)
+mainRouter.get('/edit-document/:id', ensureDocumentAccess, mainController.editDocumentGET);
+
+mainRouter.post('/edit-document/:id', ensureDocumentAccess, mainController.editDocumentPOST);
+
+mainRouter.delete('/delete-user/:id', ensureAdminAccess, mainController.userDELETE);
+
+mainRouter.get('/filter-documents', mainController.filterDocuments);
 
 module.exports = mainRouter;

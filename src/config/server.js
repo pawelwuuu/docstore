@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const app = express()
 const path = require('node:path');
 const mainRouter = require(path.join(__dirname, '..', 'routes', 'mainRouter'));
+const adminRouter = require(path.join(__dirname, '..', 'routes', 'adminRouter'));
 const apiRouter = require(path.join(__dirname, '..', 'routes', 'apiRouter'));
 const authRouter = require(path.join(__dirname, '..', 'routes', 'authRouter'));
 const bodyParser = require('body-parser');
@@ -35,6 +36,7 @@ app.get('/err', async (req, res, next) => {
 app.use(mainRouter);
 app.use(apiRouter);
 app.use(authRouter)
+app.use(authMiddleware.ensureAdminAccess ,adminRouter)
 
 app.use(errorHandler);
 

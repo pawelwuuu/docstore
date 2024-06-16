@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wyszukiwarka dokumentów</title>
+    <link rel="stylesheet" type="text/css" href="/css/filtered_documents.css">
+</head>
+<body>
+
+<%- include('../partials/header.ejs') %>
+
+<div class="main-content">
+    <div class="search-results">
+        <h3>Filtrowane Dokumenty</h3>
+        <div class="documents-list">
+            <% if (documents.length > 0) { %>
+                <% documents.forEach(doc => { %>
+                    <div class="document-item">
+                        <p><strong>Tytuł:</strong> <%= doc.title %></p>
+                        <p><strong>Autor:</strong> <%= doc.author %></p>
+                        <p><strong>Dodał:</strong> <%= doc.username %></p>
+                        <p><strong>Data dodania:</strong> <%= new Date(doc.uploaded_at).toLocaleDateString() %></p>
+                        <p><strong>Rozszerzenie pliku:</strong> <%= doc.file_ext %></p>
+                        <a href="/document/<%= doc.id %>"><button>Więcej</button></a>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>Brak dokumentów spełniających podane kryteria.</p>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="search-filter">
+        <div class="searcher">
+            <h4>Filtruj</h4>
+            <form id="searchForm" method="get" action="/filter-documents">
+                <div class="search-input">
+                    <label for="titleInput">Tytuł</label>
+                    <input id="titleInput" name="title" type="text">
+                </div>
+
+                <div class="search-input">
+                    <label for="authorInput">Autor</label>
+                    <input id="authorInput" name="author" type="text">
+                </div>
+
+                <div class="search-input">
+                    <label for="descriptionInput">Opis</label>
+                    <input id="descriptionInput" name="description" type="text">
+                </div>
+
+                <div class="search-input">
+                    <label for="uploadedByInput">Przesłał</label>
+                    <input id="uploadedByInput" name="uploadedBy" type="text">
+                </div>
+
+                <div class="search-input">
+                    <label for="uploadedAtInput">Data przesłania</label>
+                    <input id="uploadedAtInput" name="uploadedAt" type="date">
+                </div>
+
+                <div class="search-input">
+                    <label for="orderBySelect">Sortuj według</label>
+                    <select id="orderBySelect" name="orderBy">
+                        <option value="uploaded_at">Data przesłania</option>
+                        <option value="title">Tytuł</option>
+                        <option value="author">Autor</option>
+                    </select>
+                </div>
+
+                <div class="search-input">
+                    <label for="orderTypeSelect">Typ sortowania</label>
+                    <select id="orderTypeSelect" name="orderType">
+                        <option value="asc">Rosnąco</option>
+                        <option value="desc">Malejąco</option>
+                    </select>
+                </div>
+
+                <button type="submit">Filtruj</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer.ejs') %>
+
+</body>
+</html>

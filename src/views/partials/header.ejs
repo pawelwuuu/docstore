@@ -15,6 +15,12 @@
                 <span class="welcome-message">Witaj, <%= user.username %></span>
             </div>
             <div class="buttons">
+                <% if (user.is_admin === 1) {%>
+                    <a href="/admin" class="header-button">
+                        <button>Panel administratora</button>
+                    </a>
+                <% } %>
+
                 <a href="/profile" class="header-button">
                     <button>Profil</button>
                 </a>

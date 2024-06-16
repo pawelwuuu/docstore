@@ -28,12 +28,39 @@
 
     <div class="right">
         <h4>Wyszukaj</h4>
-        <label for="titleInput">Tytuł</label>
-        <input id="titleInput" name="title" type="text" class="searchInput">
+        <form id="searchForm" method="get" action="/filter-documents">
+            <label for="titleInput">Tytuł</label>
+            <input id="titleInput" name="title" type="text" class="searchInput">
 
-        <label for="authorInput">Autor</label>
-        <input id="authorInput" name="author" type="text" class="searchInput">
+            <label for="authorInput">Autor</label>
+            <input id="authorInput" name="author" type="text" class="searchInput">
+
+            <label for="descriptionInput">Opis</label>
+            <input id="descriptionInput" name="description" type="text" class="searchInput">
+
+            <label for="uploadedByInput">Przesłał</label>
+            <input id="uploadedByInput" name="uploadedBy" type="text" class="searchInput">
+
+            <label for="uploadedAtInput">Data przesłania</label>
+            <input id="uploadedAtInput" name="uploadedAt" type="date" class="searchInput">
+
+            <label for="orderBySelect">Sortuj według</label>
+            <select id="orderBySelect" name="orderBy" class="searchInput">
+                <option value="uploaded_at">Data przesłania</option>
+                <option value="title">Tytuł</option>
+                <option value="author">Autor</option>
+            </select>
+
+            <label for="orderTypeSelect">Typ sortowania</label>
+            <select id="orderTypeSelect" name="orderType" class="searchInput">
+                <option value="asc">Rosnąco</option>
+                <option value="desc">Malejąco</option>
+            </select>
+
+            <button type="submit">Filtruj</button>
+        </form>
     </div>
+
 </div>
 
 <%- include('partials/footer.ejs') %>

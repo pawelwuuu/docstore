@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administratora - Dokumenty</title>
+    <link rel="stylesheet" type="text/css" href="/css/admin_document.css">
+</head>
+
+<body>
+<%- include('../partials/header.ejs') %>
+
+<div class="admin-container">
+    <div class="sidebar">
+        <%- include('../partials/admin_panel.ejs') %>
+    </div>
+    <div class="main-content">
+        <h3>Wszystkie dokumenty</h3>
+        <div class="documents-list">
+            <% documents.forEach(doc => { %>
+                <div class="document-item">
+                    <p><strong>ID:</strong> <%= doc.id %></p>
+                    <p><strong>ID użytkownika:</strong> <%= doc.user_id %></p>
+                    <p><strong>Tytuł:</strong> <%= doc.title %></p>
+                    <p><strong>Autor:</strong> <%= doc.author %></p>
+                    <p><strong>Filename:</strong> <%= doc.filename %></p>
+                    <p><strong>Dodano:</strong> <%= new Date(doc.uploaded_at).toLocaleDateString() %></p>
+                    <p><strong>Rozszerzenie pliku:</strong> <%= doc.file_ext %></p>
+                    <a href="/delete-document/<%= doc.id %>"><button>Usuń</button></a>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</div>
+<%- include('../partials/footer.ejs') %>
+</body>

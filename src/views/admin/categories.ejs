@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administratora - Kategorie</title>
+    <link rel="stylesheet" type="text/css" href="/css/admin_categories.css">
+</head>
+<body>
+<%- include('../partials/header.ejs') %>
+<div class="admin-container">
+    <div class="sidebar">
+        <%- include('../partials/admin_panel.ejs') %>
+    </div>
+    <div class="main-content">
+        <h3>Zarządzaj kategoriami</h3>
+        <div class="add-category">
+            <h3>Dodaj nową kategorię</h3>
+            <form action="/admin/add-category" method="post">
+                <label for="category_name">Nazwa kategorii:</label>
+                <input type="text" id="category_name" name="category_name" required>
+                <button type="submit">Dodaj</button>
+            </form>
+        </div>
+        <div class="categories-list">
+            <% categories.forEach(category => { %>
+                <div class="category-item">
+                    <p><strong>ID:</strong> <%= category.id %></p>
+                    <p><strong>Nazwa kategorii:</strong> <%= category.category_name %></p>
+                    <a><button onclick="deleteCategory(<%= category.id %>)">Usuń</button></a>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</div>
+<script src="/js/deleteCategory.js"></script>
+<%- include('../partials/popup.ejs') %>
+<%- include('../partials/footer.ejs') %>
+</body>
+</html>

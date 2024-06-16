@@ -20,9 +20,10 @@ exports.seed = function(knex) {
         }
 
         users.push ({
-            username: 'test',
-            email: 'test@test.pl',
-            password: bcrypt.hashSync('test', 11)
+            username: 'admin',
+            email: 'admin@test.pl',
+            password: bcrypt.hashSync('admin', 11),
+            is_admin: true,
         })
         return knex('users').insert(users);
       });
