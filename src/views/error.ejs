@@ -1,7 +1,16 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Błąd - DocStore</title>
+    <link rel="stylesheet" type="text/css" href="/css/error.css">
+</head>
 <body>
-
-<%= err.statusCode %>
-<%= err.userMsg || 'Wystąpił błąd.' %>
-<a href="/">Strona główna</a>
-
+<div class="error-container">
+    <h1 class="error-code"><%= err.statusCode %></h1>
+    <p class="error-message"><%= err.userMsg || 'Wystąpił błąd.' %></p>
+    <a href="/" class="home-link">Strona główna</a>
+</div>
 </body>
+</html>

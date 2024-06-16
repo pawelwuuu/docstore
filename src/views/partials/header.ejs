@@ -1,43 +1,41 @@
 <!DOCTYPE html>
-<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DocStore</title>
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
 </head>
 <body>
 <header class="header">
-    <a href="/">
-        <img src="img/logo.png" alt="DocStore Logo" width="100" height="100">
+    <a href="/" class="logo-link">
+        <img src="/img/logo.png" alt="DocStore Logo" class="logo">
     </a>
 
-    <div class="search-bar">
-        <input type="text" placeholder="Szukaj...">
+    <div class="header-buttons">
+        <% if (user) { %>
+            <div class="user-info">
+                <span class="welcome-message">Witaj, <%= user.username %></span>
+            </div>
+            <div class="buttons">
+                <a href="/profile" class="header-button">
+                    <button>Profil</button>
+                </a>
+                <a href="/add-document" class="header-button">
+                    <button>Dodaj dokument</button>
+                </a>
+                <a href="/logout" class="header-button">
+                    <button>Wyloguj</button>
+                </a>
+            </div>
+        <% } else { %>
+            <div class="buttons">
+                <a href="/login" class="header-button">
+                    <button>Zaloguj się</button>
+                </a>
+                <a href="/register" class="header-button">
+                    <button>Zarejestruj się</button>
+                </a>
+            </div>
+        <% } %>
     </div>
-
-    <% if (user) { %>
-        <div class="header-buttons">
-            Witaj <%= user.username %>
-            <a href="/profile">
-                <button>Profil</button>
-            </a>
-            <a href="/add-document">
-                <button>Dodaj dokument</button>
-            </a>
-            <a href="/logout">
-                <button>Wyloguj</button>
-            </a>
-        </div>
-    <% } else { %>
-        <div class="header-buttons">
-            <a href="/login">
-                <button>Zaloguj się</button>
-            </a>
-            <a href="/register">
-                <button>Zarejestruj się</button>
-            </a>
-        </div>
-    <% } %>
 </header>
 </body>
 </html>

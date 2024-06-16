@@ -11,7 +11,6 @@ const authMiddleware = require(path.join(__dirname, '..', 'middlewares', 'authMi
 const errorHandler = require(path.join(__dirname,'..', 'middlewares', 'errorHandler'));
 const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload');
-const connectToDatabase = require('../config/db')
 
 dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
 

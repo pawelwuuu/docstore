@@ -16,6 +16,8 @@ form.addEventListener('submit', async (e) => {
         if (res.status >= 300) {
             const resultJson = await res.json();
             document.getElementById('register-error-wrapper').innerText = (resultJson.validateResult);
+        } else if (res.status === 201) {
+            showPopup('Zostałeś zarejstrowany', false);
         }
     } catch (e) {
         console.log(e)

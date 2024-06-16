@@ -1,10 +1,22 @@
 <%- include('../partials/header.ejs') %>
 
-<form method="post" action="/login">
-    email: <input type="text" name="email">
-    haslo: <input type="password" name="password">
-    <button type="submit">loguj mnie</button>
-</form>
-<div id="login-error-wrapper"></div>
+<head>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<main class="login-container">
+    <form method="post" action="/login" class="login-form">
+        <label for="text">Login:</label>
+        <input type="text" id="email" name="email" required>
+        <br>
+        <label for="password">Hasło:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="submit">Zaloguj</button>
+    </form>
+    <div id="login-error-wrapper"></div>
+</main>
+
+<%- include('../partials/popup.ejs') %>
 
 <script src="js/auth/loginHandler.js"></script>

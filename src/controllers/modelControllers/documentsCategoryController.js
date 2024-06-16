@@ -17,12 +17,10 @@ const findAllDocumentCategories = async () => {
     }
 };
 
-const findDocumentCategory = async (documentId, categoryId) => {
+const findDocumentCategory = async (documentId) => {
     try {
-        return db('documents_category')
-            .where('document_id', '=', documentId)
-            .andWhere('category_id', '=', categoryId)
-            .first();
+        return db('document_category')
+            .where('document_id', '=', documentId);
     } catch (e) {
         throw e;
     }

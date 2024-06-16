@@ -1,30 +1,42 @@
+/* home.css */
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
     margin: 0;
     padding: 0;
 }
 
 .container {
+    display: flex;
+    justify-content: space-between;
     padding: 20px;
-    width: 80%;
-    margin: auto auto;
 }
 
-.documentCard {
-    border: 1px solid #ccc;
+.left, .right {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin-bottom: 20px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
-.documentCard h4 {
+.left {
+    width: 70%;
+}
+
+.right {
+    width: 25%;
+}
+
+h3, h4 {
     margin-top: 0;
 }
 
-.documentCard p {
-    margin: 5px 0;
+hr {
+    border: none;
+    border-top: 2px solid #e9ecef;
+    margin: 10px 0;
 }
 
 .blankLink {
@@ -32,19 +44,31 @@ body {
     color: inherit;
 }
 
+.documentCard {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
 .documentCard:hover {
-    transform: translateY(-1px); /* Przesunięcie karty o 5px w górę */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Dodanie delikatnego cienia */
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.left {
-    width: 80%;
-    float: left;
-    margin-bottom: 80px;
+.searchInput {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
 }
 
-.right {
-    width: 20%;
-    margin-top: 40px;
-    float: right;
+.searchInput:focus {
+    border-color: #007bff;
+    outline: none;
 }

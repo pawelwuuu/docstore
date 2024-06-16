@@ -1,0 +1,72 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.add-document-form .form-group {
+    margin-bottom: 20px;
+}
+
+.add-document-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.add-document-form input[type="text"],
+.add-document-form input[type="email"],
+.add-document-form input[type="password"],
+.add-document-form textarea,
+.add-document-form input[type="file"],
+.add-document-form button,
+.add-document-form input[type="checkbox"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+.add-document-form textarea {
+    resize: vertical;
+}
+
+.add-document-form .category-checkbox {
+    margin-bottom: 5px;
+}
+
+.add-document-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.add-document-form button:hover {
+    background-color: #0056b3;
+}
+
+.add-document-error-wrapper {
+    color: #dc3545;
+    margin-top: 10px;
+}

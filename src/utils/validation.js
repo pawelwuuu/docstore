@@ -3,84 +3,82 @@ const passwordOperations = require("./passwordOperations");
 const _fileType = import('file-type');
 const allowedDocExt = require("./allowedDocExt");
 
-const validateAddDocData = async (title, description, author, category, fileBuffer) => {
-    const errors = {};
-
+const validateTitle = (title, errors) => {
     if (!title || typeof title !== 'string' || title.trim() === '') {
         errors.title = 'Tytuł jest wymagany i musi być tekstem.';
     } else if (title.length > 255) {
         errors.title = 'Tytuł nie może być dłuższy niż 255 znaków.';
     }
+};
 
+const validateDescription = (description, errors) => {
     if (!description || typeof description !== 'string' || description.trim() === '') {
         errors.description = 'Opis jest wymagany i musi być tekstem.';
     } else if (description.length > 1000) {
         errors.description = 'Opis nie może być dłuższy niż 1000 znaków.';
     }
+};
 
+const validateAuthor = (author, errors, maxLength = 255) => {
     if (!author || typeof author !== 'string' || author.trim() === '') {
         errors.author = 'Autor jest wymagany i musi być tekstem.';
-    } else if (author.length > 255) {
-        errors.author = 'Autor nie może być dłuższy niż 255 znaków.';
+    } else if (author.length > maxLength) {
+        errors.author = `Autor nie może być dłuższy niż ${maxLength} znaków.`;
     }
+};
 
-    if (!category) {
-        errors.category = 'Należy wybrać przynajmniej jedną kategorie';
+const validateCategory = (category, errors) => {
+    if (!category || category.length === 0) {
+        errors.category = 'Należy wybrać przynajmniej jedną kategorię.';
     }
+};
 
+const validateFile = async (fileBuffer, errors) => {
     const fileType = await _fileType;
     const fileExtension = await fileType.fileTypeFromBuffer(fileBuffer);
-    if (! allowedDocExt.includes("." + fileExtension.ext)) {
+    if (!allowedDocExt.includes("." + fileExtension.ext)) {
         errors.file = 'Ten typ pliku jest niedozwolony.';
     }
+    return fileExtension?.ext;
+};
+
+const validateAddDocData = async (title, description, author, category, fileBuffer) => {
+    const errors = {};
+
+    validateTitle(title, errors);
+    validateDescription(description, errors);
+    validateAuthor(author, errors);
+    validateCategory(category, errors);
+
+    const fileExtension = await validateFile(fileBuffer, errors);
 
     return {
         isValid: Object.keys(errors).length === 0,
-        fileExtension: fileExtension?.ext,
+        fileExtension,
         errors
     };
-}
+};
 
 const validateEditDocData = async (title, description, author, category, fileBuffer) => {
     const errors = {};
 
-    if (!title || typeof title !== 'string' || title.trim() === '') {
-        errors.title = 'Tytuł jest wymagany i musi być tekstem.';
-    } else if (title.length > 255) {
-        errors.title = 'Tytuł nie może być dłuższy niż 255 znaków.';
-    }
+    validateTitle(title, errors);
+    validateDescription(description, errors);
+    validateAuthor(author, errors, 60);
+    validateCategory(category, errors);
 
-    if (!description || typeof description !== 'string' || description.trim() === '') {
-        errors.description = 'Opis jest wymagany i musi być tekstem.';
-    } else if (description.length > 1000) {
-        errors.description = 'Opis nie może być dłuższy niż 1000 znaków.';
-    }
-
-    if (!author || typeof author !== 'string' || author.trim() === '') {
-        errors.author = 'Autor jest wymagany i musi być tekstem.';
-    } else if (author.length > 60) {
-        errors.author = 'Autor nie może być dłuższy niż 60 znaków.';
-    }
-
-    if (!category) {
-        errors.category = 'Należy wybrać przynajmniej jedną kategorie';
-    }
-
-    let fileExtension;
+    let fileExtension = null;
     if (fileBuffer) {
-        const fileType = await _fileType;
-        fileExtension = await fileType.fileTypeFromBuffer(fileBuffer);
-        if (! allowedDocExt.includes("." + fileExtension.ext)) {
-            errors.file = 'Ten typ pliku jest niedozwolony.';
-        }
+        fileExtension = await validateFile(fileBuffer, errors);
     }
 
     return {
         isValid: Object.keys(errors).length === 0,
-        fileExtension: fileExtension?.ext || null,
+        fileExtension,
         errors
     };
-}
+};
+
 
 const validateRegisterData = async (username, email, password) => {
     // walidacja nicku
@@ -120,7 +118,7 @@ const validateLoginData = async (login, password) => {
         }
 
     } else {
-        return 'Użytkownik o podanym mailu nie istnieje.';
+        return 'Użytkownik o podanym loginie nie istnieje.';
     }
 }
 

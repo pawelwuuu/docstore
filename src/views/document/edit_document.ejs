@@ -1,26 +1,55 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edytuj Dokument</title>
+    <link rel="stylesheet" type="text/css" href="/css/edit_document.css">
+</head>
 <body>
+
+<%- include('../partials/header.ejs') %>
+
 <div class="form-container">
     <h2>Edytuj Dokument</h2>
-    <form action="/edit-document/<%= document.id %>" method="post" encType="multipart/form-data">
-        <label for="title">Tytuł</label>
-        <input type="text" id="title" name="title" required>
+    <form action="/edit-document/<%= document.id %>" method="post" enctype="multipart/form-data" class="edit-document-form">
+        <div class="form-group">
+            <label for="title">Tytuł:</label>
+            <input type="text" id="title" name="title" value="<%= document.title %>" required>
+        </div>
 
-        <label for="description">Opis</label>
-        <textarea id="description" name="description" rows="4" required></textarea>
+        <div class="form-group">
+            <label for="description">Opis:</label>
+            <textarea id="description" name="description" rows="4" required><%= document.description %></textarea>
+        </div>
 
-        <label for="author">Autor</label>
-        <input type="text" id="author" name="author" required>
+        <div class="form-group">
+            <label for="author">Autor:</label>
+            <input type="text" id="author" name="author" value="<%= document.author %>" required>
+        </div>
 
-        <label for="file">Plik</label>
-        <input type="file" id="file" name="documentFile">
+        <div class="form-group">
+            <label for="file">Plik:</label>
+            <input type="file" id="file" name="documentFile">
+            <p>Aktualny plik: <a href="/uploads/<%= document.filename %>"><%= document.filename %></a></p>
+        </div>
 
-        <label for="category">Kategoria dokumentu</label>
-        <% categories.forEach((category) => { %>
-            <input type="checkbox" value="<%= category.id %>" name="category">
-            <%= category.category_name %>
-        <% }); %>
+        <div class="form-group">
+            <label>Kategoria dokumentu:</label>
+            <% categories.forEach((category) => { %>
+                <div class="category-checkbox">
+                    <input type="checkbox" value="<%= category.id %>" name="category" <% if (documentCategories.includes(category.id)) { %> checked <% } %>>
+                    <label for="category_<%= category.id %>"><%= category.category_name %></label>
+                </div>
+            <% }); %>
+        </div>
 
         <button type="submit">Edytuj dokument</button>
     </form>
+
+    <div id="edit-doc-error-wrapper"></div>
 </div>
+<%- include('../partials/popup.ejs') %>
+<script src="/js/editDocumentHandler.js"></script>
 </body>
+</html>

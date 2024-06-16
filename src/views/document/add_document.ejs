@@ -1,26 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodaj Dokument</title>
+    <link rel="stylesheet" type="text/css" href="/css/add_document.css">
+</head>
 <body>
+<%- include('../partials/header.ejs') %>
+
 <div class="form-container">
     <h2>Dodaj Dokument</h2>
-    <form action="/add-document" method="POST" encType="multipart/form-data">
-        <label for="title">Tytuł</label>
-        <input type="text" id="title" name="title" required>
+    <form action="/add-document" method="POST" enctype="multipart/form-data" class="add-document-form">
+        <div class="form-group">
+            <label for="title">Tytuł:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
 
-        <label for="description">Opis</label>
-        <textarea id="description" name="description" rows="4" required></textarea>
+        <div class="form-group">
+            <label for="description">Opis:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+        </div>
 
-        <label for="author">Autor</label>
-        <input type="text" id="author" name="author" required>
+        <div class="form-group">
+            <label for="author">Autor:</label>
+            <input type="text" id="author" name="author" required>
+        </div>
 
-        <label for="file">Plik</label>
-        <input type="file" id="file" name="documentFile" required>
+        <div class="form-group">
+            <label for="file">Plik:</label>
+            <input type="file" id="file" name="documentFile" required>
+        </div>
 
-        <label for="category">Kategoria dokumentu</label>
-        <% categories.forEach((category) => { %>
-            <input type="checkbox" value="<%= category.id %>" name="category">
-            <%= category.category_name %>
-        <% }); %>
+        <div class="form-group">
+            <label>Kategoria dokumentu:</label>
+            <% categories.forEach((category) => { %>
+                <div class="category-checkbox">
+                    <input type="checkbox" id="category_<%= category.id %>" value="<%= category.id %>" name="category">
+                    <label for="category_<%= category.id %>"><%= category.category_name %></label>
+                </div>
+            <% }); %>
+        </div>
 
         <button type="submit">Dodaj Dokument</button>
     </form>
+    <div class="add-document-error-wrapper"></div>
 </div>
 </body>
+
+<%- include('../partials/popup.ejs') %>
+<script src="js/addDocumentHandler.js"></script>
+
+</html>

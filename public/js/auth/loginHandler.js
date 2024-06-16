@@ -15,6 +15,8 @@ form.addEventListener('submit', async (e) => {
         if (res.status >= 300) {
             const resultJson = await res.json();
             document.getElementById('login-error-wrapper').innerText = (resultJson.validateResult);
+        } else if (res.status === 201) {
+            showPopup('Pomyślnie zalogowano', false);
         }
     } catch (e) {
         console.log(e)

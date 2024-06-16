@@ -4,22 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= doc.title %></title>
+    <link rel="stylesheet" type="text/css" href="/css/document.css">
 </head>
 <body>
 <%- include('../partials/header.ejs') %>
 
-<h1><%= doc.title %></h1>
-<p><%= doc.description %></p>
-<p>Autor: <%= doc.author %></p>
-<p>Dodano: <%= new Date(doc.uploaded_at).toLocaleDateString() %></p>
-<p>Użytkownik: <%= doc.username %></p>
-<p><a href="/uploads/<%= doc.filename %>" download="<%= doc.title.replaceAll(' ', '_') + "." + doc.file_ext %>">Pobierz plik</a></p>
+<main class="document-view">
+    <article class="document-content">
+        <h1><%= doc.title %></h1>
+        <p><%= doc.description %></p>
+        <p><strong>Autor:</strong> <%= doc.author %></p>
+        <p><strong>Dodano:</strong> <%= new Date(doc.uploaded_at).toLocaleDateString() %></p>
+        <p><strong>Użytkownik:</strong> <%= doc.username %></p>
+        <p><a href="/uploads/<%= doc.filename %>" download="<%= doc.title.replaceAll(' ', '_') + '.' + doc.file_ext %>">Pobierz plik</a></p>
+    </article>
 
-<% if (user?.username === doc.username) { %>
-    <a href="/edit-document/<%= doc.id %>">Edytuj</a>
-    <a href="/delete-document/<%= doc.id %>" id="delete-document-link">Usuń</a>
-    <script src="/js/deleteDocumentHandler.js"></script>
-<% } %>
+    <% if (user?.username === doc.username) { %>
+        <div class="document-actions">
+            <a href="/edit-document/<%= doc.id %>" class="action-link">Edytuj</a>
+            <a href="/delete-document/<%= doc.id %>" id="delete-document-link" class="action-link">Usuń</a>
+        </div>
+        <div id="delete-success"></div>
+        <script src="/js/deleteDocumentHandler.js"></script>
+    <% } %>
+</main>
+
+<%- include('../partials/popup.ejs') %>
+
+<%- include('../partials/footer.ejs') %>
 </body>
-
 </html>

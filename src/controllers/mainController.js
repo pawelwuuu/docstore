@@ -1,5 +1,6 @@
 const documentController = require('./modelControllers/documentCotroller');
 const categoryController = require('./modelControllers/categoryController');
+const documentCategoryController = require('./modelControllers/documentsCategoryController');
 const path = require('node:path');
 const _uniqueString = import('unique-string');
 const validation = require('../utils/validation');
@@ -43,7 +44,8 @@ const addDocumentGET = async (req, res, next) => {
 
 const addDocumentPOST = async (req, res, next) => {
     try {
-        const {title, description, author, category} = req.body
+        let {title, description, author, category} = req.body
+        category = category ? [...category] : [];
 
         let uploadedFile = null
         if (req.files) {
@@ -104,8 +106,13 @@ const editDocumentGET = async (req,res,next) => {
         const categories = await categoryController.findAllCategories();
         const documentId = req.params.id;
         const document = await documentController.findDocumentByID(documentId);
+        const documentCategories = await documentCategoryController.findDocumentCategory(documentId);
+        const documentCategoriesValues = [];
+        documentCategories.forEach(docCategory => {
+            documentCategoriesValues.push(docCategory.category_id);
+        });
 
-        res.render('document/edit_document', {categories, document})
+        res.render('document/edit_document', {categories, document, documentCategories: documentCategoriesValues})
     } catch (e) {
         next(e);
     }
@@ -124,7 +131,7 @@ const editDocumentPOST = async (req,res,next) => {
             let uniqueFilename
             if (req.files?.documentFile) {
                 const uniqueString = await _uniqueString;
-                uniqueFilename = uniqueString.default()
+                const uniqueFilename = `${uniqueString.default()}.${validationResult.fileExtension}`;
                 await uploadedFile.mv(path.join(__dirname, '..', '..', 'public', 'uploads', uniqueFilename));
 
                 await filleOperations.moveFile(

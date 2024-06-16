@@ -1,6 +1,9 @@
+<!DOCTYPE html>
+<html lang="pl">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DocStore</title>
-
     <link rel="stylesheet" type="text/css" href="css/home.css">
     <link rel="stylesheet" type="text/css" href="css/partials.css">
 </head>
@@ -8,7 +11,6 @@
 <%- include('partials/header.ejs') %>
 
 <div class="container">
-
     <div class="left">
         <h3>Ostatnio dodane</h3>
         <hr>
@@ -27,15 +29,13 @@
     <div class="right">
         <h4>Wyszukaj</h4>
         <label for="titleInput">Tytuł</label>
-        <input id="titleInput" name="title">
+        <input id="titleInput" name="title" type="text" class="searchInput">
 
         <label for="authorInput">Autor</label>
-        <input id="authorInput" name="author">
-
+        <input id="authorInput" name="author" type="text" class="searchInput">
     </div>
-
-
 </div>
 
 <%- include('partials/footer.ejs') %>
 </body>
+</html>
