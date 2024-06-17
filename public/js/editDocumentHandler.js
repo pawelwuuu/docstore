@@ -3,30 +3,28 @@ const form = document.querySelector('form');
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const currentURL = window.location.href;
+    tryRetry(async () => {
+        const currentURL = window.location.href;
+        const formData = new FormData(form);
+        const categories = [];
+        document.querySelectorAll('input[name="category"]:checked').forEach(category => {
+            categories.push(category.value);
+        });
 
-    const formData = new FormData(form);
-    const categories = [];
-    document.querySelectorAll('input[name="category"]:checked').forEach(category => {
-        categories.push(category.value);
-    });
+        formData.append('categories', JSON.stringify(categories));
 
-    formData.append('categories', JSON.stringify(categories));
-
-    try {
         const res = await fetch(currentURL, {
             method: 'POST',
             body: formData,
         });
 
-        if (!res.ok) {
+        if (res.status >= 400 && res.status < 500) {
             const feedback = await res.json();
             document.getElementById('edit-doc-error-wrapper').innerText = Object.values(feedback.errors)[0];
-        } else {
+        } else if (res.ok) {
             showPopup('Dokument został zaktualizowany.');
+        } else if (res.status >= 500 && res.status < 600) {
+            throw new Error();
         }
-    } catch (error) {
-        console.log(error);
-        document.getElementById('edit-doc-error-wrapper').innerText = 'Wystąpił błąd podczas aktualizacji dokumentu.';
-    }
+    });
 });

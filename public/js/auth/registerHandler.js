@@ -2,11 +2,11 @@ const form = document.querySelector('form');
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const username = form.username.value;
-    const email = form.email.value;
-    const password = form.password.value;
-    
-    try {
+    tryRetry(async () => {
+        const username = form.username.value;
+        const email = form.email.value;
+        const password = form.password.value;
+
         const res = await fetch('/register', {
             method: 'POST',
             body: JSON.stringify({username, email, password}),
@@ -16,10 +16,10 @@ form.addEventListener('submit', async (e) => {
         if (res.status >= 300) {
             const resultJson = await res.json();
             document.getElementById('register-error-wrapper').innerText = (resultJson.validateResult);
-        } else if (res.status === 201) {
+        } else if (res.ok) {
             showPopup('Zostałeś zarejstrowany', false);
+        } else if (res.status >= 500) {
+            throw new Error();
         }
-    } catch (e) {
-        console.log(e)
-    }
-})
+    });
+});

@@ -1,7 +1,8 @@
-const showPopup = (content, closeable = true, href ='/') => {
+function showPopup(content, closeable = true,  href ='/', buttonText = 'Strona główna') {
     const popup = document.getElementById('popupContainer');
     popup.querySelector('p').innerText = content;
     popup.querySelector('a').href = href;
+    popup.querySelector('a').innerText = buttonText;
 
     if (closeable) {
         var closeButton = document.getElementById("closePopup");
@@ -20,4 +21,3 @@ const showPopup = (content, closeable = true, href ='/') => {
 
     popup.style.display = 'block';
 }
-
