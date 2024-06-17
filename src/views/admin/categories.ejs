@@ -27,6 +27,7 @@
                 <div class="category-item">
                     <p><strong>ID:</strong> <%= category.id %></p>
                     <p><strong>Nazwa kategorii:</strong> <%= category.category_name %></p>
+                    <p><strong>Łącznie dokumentów:</strong> <%= category.doc_count %></p>
                     <a><button onclick="deleteCategory(<%= category.id %>)">Usuń</button></a>
                 </div>
             <% }); %>

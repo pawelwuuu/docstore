@@ -1,6 +1,9 @@
 <!DOCTYPE html>
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocStore</title>
     <link rel="stylesheet" type="text/css" href="/css/header.css">
 </head>
 <body>
@@ -15,29 +18,29 @@
                 <span class="welcome-message">Witaj, <%= user.username %></span>
             </div>
             <div class="buttons">
-                <% if (user.is_admin === 1) {%>
+                <% if (user.is_admin === 1) { %>
                     <a href="/admin" class="header-button">
-                        <button>Panel administratora</button>
+                        Panel administratora
                     </a>
                 <% } %>
 
                 <a href="/profile" class="header-button">
-                    <button>Profil</button>
+                    Profil
                 </a>
                 <a href="/add-document" class="header-button">
-                    <button>Dodaj dokument</button>
+                    Dodaj dokument
                 </a>
                 <a href="/logout" class="header-button">
-                    <button>Wyloguj</button>
+                    Wyloguj
                 </a>
             </div>
         <% } else { %>
             <div class="buttons">
                 <a href="/login" class="header-button">
-                    <button>Zaloguj się</button>
+                    Zaloguj się
                 </a>
                 <a href="/register" class="header-button">
-                    <button>Zarejestruj się</button>
+                    Zarejestruj się
                 </a>
             </div>
         <% } %>

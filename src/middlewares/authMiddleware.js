@@ -13,7 +13,8 @@ const signInUser = (req, res, next) => {
                 let user = await userController.findUserByID(decodedToken.id);
                 delete user?.password;
 
-                if (user.is_banned === 0) {
+
+                if (user?.is_banned === 0) {
                     res.locals.user = user;
                     next();
                 } else {
@@ -49,7 +50,7 @@ const ensureDocumentAccess = async (req, res, next) => {
 const ensureAdminAccess = async  (req, res, next) => {
     try {
         const loggedUser = res.locals.user
-        if (loggedUser.is_admin === 1) {
+        if (loggedUser?.is_admin === 1) {
             next();
         } else {
             const err = new Error("Brak dostępu.");

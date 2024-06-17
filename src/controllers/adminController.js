@@ -24,7 +24,7 @@ const adminUsersGET = async (req, res, next) => {
 
 const adminCategoriesGET = async (req, res, next) => {
     try {
-        const categories = await categoriesController.findAllCategories();
+        const categories = await categoriesController.getCategoriesDocCount()
 
         res.render('admin/categories', {categories})
     } catch (e) {
@@ -123,14 +123,12 @@ const categoryDELETE = async (req,res,next) => {
         const categoryId = req.params.id;
 
         if (await categoriesController.deleteCategory(categoryId)) {
-            res.redirect('/admin/categories');
+            res.status(200).json('Kateogria usunięta.');
         } else {
-            const err = new Error();
-            err.userMsg = 'Nie można usunąć kategorii.'
-            throw err;
+            res.status(500).json('Nie można usunąć kateogrii');
         }
     } catch (e) {
-        next(e)
+        next(e);
     }
 }
 

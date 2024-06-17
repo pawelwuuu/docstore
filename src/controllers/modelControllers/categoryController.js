@@ -53,4 +53,14 @@ const deleteCategory = async (id) => {
     }
 };
 
-module.exports = {createCategory, findAllCategories, findCategoryByID, updateCategory, deleteCategory};
+const getCategoriesDocCount = async () => {
+    try {
+        return await db('categories').select('id','category_name').count('document_category.document_id as doc_count')
+            .leftJoin('document_category', 'categories.id', 'document_category.category_id')
+            .groupBy('category_name').groupBy('id');
+    } catch (e) {
+        throw e;
+    }
+}
+
+module.exports = {createCategory, findAllCategories, findCategoryByID, updateCategory, deleteCategory, getCategoriesDocCount};
