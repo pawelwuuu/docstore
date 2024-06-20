@@ -2,8 +2,7 @@ const db = require('../../config/db')
 
 const createComment = async (comment) => {
     try {
-        await db('comments').insert(comment);
-        return true;
+        return await db('comments').insert(comment);
     } catch (e) {
         throw e;
     }
@@ -53,4 +52,27 @@ const deleteComment = async (id) => {
     }
 };
 
-module.exports = {createComment, findAllComments, findCommentByID, updateComment, deleteComment};
+const countUserDocumentComments = async (userId, documentId) => {
+    try {
+        return await db('comments').count('* as comments_count').where('document_id', documentId).andWhere('user_id', userId).first();
+    } catch (e) {
+        throw e;
+    }
+}
+
+const getCommentsByDocumentId = async (documentId) => {
+    try {
+        return await db('comments')
+            .where('comments.document_id', documentId)
+            .join('users', 'comments.user_id', 'users.id')
+            .select(
+                'comments.*',
+                'users.username'
+            );
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+module.exports = {createComment, findAllComments, findCommentByID, updateComment, deleteComment, countUserDocumentComments, getCommentsByDocumentId};

@@ -48,6 +48,91 @@ const findDocumentByID = async (id) => {
     }
 };
 
+const getUserDocuments = async (userId) => {
+    try {
+        return await db('documents').where('user_id', userId)
+    } catch (e) {
+        throw e;
+    }
+}
+
+
+async function getDocumentDetails(documentId) {
+    try {
+        return await db.transaction(async trx => {
+            const doc = await trx('documents')
+                .where('documents.id', documentId)
+                .join('users', 'documents.user_id', 'users.id')
+                .select(
+                    'documents.*',
+                    'users.username'
+                )
+                .first();
+
+            if (!doc) {
+                throw new Error(`Dokument nie istnieje`);
+            }
+
+            const categories = await trx('document_category')
+                .where('document_category.document_id', documentId)
+                .join('categories', 'document_category.category_id', 'categories.id')
+                .select(
+                    'categories.id as category_id',
+                    'categories.category_name'
+                );
+
+            doc.categories = categories.map(cat => ({
+                category_id: cat.category_id,
+                category_name: cat.category_name
+            }));
+
+            return doc;
+        });
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function getDocumentsByCategoryIds(categoryIds) {
+    try {
+        const documents = await db.transaction(async trx => {
+            const docs = await trx('documents')
+                .join('document_category', 'documents.id', 'document_category.document_id')
+                .join('categories', 'document_category.category_id', 'categories.id')
+                .whereIn('document_category.category_id', categoryIds)
+                .select('documents.*')
+                .distinct();
+
+            const docIds = docs.map(doc => doc.id);
+
+            const categories = await trx('document_category')
+                .whereIn('document_category.document_id', docIds)
+                .join('categories', 'document_category.category_id', 'categories.id')
+                .select(
+                    'document_category.document_id',
+                    'categories.id as category_id',
+                    'categories.category_name'
+                );
+
+            return docs.map(doc => {
+                return {
+                    ...doc,
+                    categories: categories
+                        .filter(cat => cat.document_id === doc.id)
+                        .map(cat => ({
+                            category_id: cat.category_id,
+                            category_name: cat.category_name
+                        }))
+                };
+            });
+        });
+
+        return documents;
+    } catch (error) {
+        throw error;
+    }
+}
+
 const findDocumentByFilter = async (_filter) => {
     try {
          const filter = {
@@ -65,7 +150,7 @@ const findDocumentByFilter = async (_filter) => {
 
         let filteredDocs;
         if (filter.perPage === -1) {
-            filteredDocs = await db('documents').select('documents.*', 'users.username')
+            filteredDocs = await db('documents').select('documents.*', 'users.username', 'users.id')
                 .join('users', 'users.id', 'documents.user_id')
                 .whereLike('documents.id', filter.id)
                 .whereILike('uploaded_at', filter.uploadedAt)
@@ -134,4 +219,5 @@ const deleteDocument = async (id) => {
     }
 };
 
-module.exports = {createDocument, findAllDocuments, findDocumentByID, updateDocument, deleteDocument, findDocumentByFiler: findDocumentByFilter};
+module.exports = {createDocument, findAllDocuments, findDocumentByID, updateDocument, deleteDocument, findDocumentByFiler: findDocumentByFilter,
+    getUserDocuments, getDocumentDetails, getDocumentsByCategoryIds};

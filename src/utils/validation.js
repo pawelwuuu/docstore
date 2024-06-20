@@ -2,6 +2,7 @@ const userController = require("../controllers/modelControllers/userController")
 const passwordOperations = require("./passwordOperations");
 const _fileType = import('file-type');
 const allowedDocExt = require("./allowedDocExt");
+const commentsController = require('../controllers/modelControllers/commentsController');
 
 const validateTitle = (title, errors) => {
     if (!title || typeof title !== 'string' || title.trim() === '') {
@@ -41,6 +42,28 @@ const validateFile = async (fileBuffer, errors) => {
     }
     return fileExtension?.ext;
 };
+
+const validateComment = async (userId, documentId, content) => {
+    const errors = {};
+
+    const userCommentsDocCount = await commentsController.countUserDocumentComments(userId, documentId);
+    if (userCommentsDocCount.comments_count > 1) {
+        errors.alreadyCommented = 'Możesz dodać maksymalnie jeden komentarz do każdego dokumentu.';
+    }
+
+    if (content.trim() === '') {
+        errors.content = 'Komentarz nie może być pusty.';
+    }
+
+    if (content.trim() > 500) {
+        errors.content = 'Komentarz nie może mieć więcej niż 500 znaków.';
+    }
+
+    return {
+        isValid: Object.keys(errors).length === 0,
+        errors
+    };
+}
 
 const validateAddDocData = async (title, description, author, category, fileBuffer) => {
     const errors = {};
@@ -122,4 +145,4 @@ const validateLoginData = async (login, password) => {
     }
 }
 
-module.exports = {validateEditDocData, validateAddDocData, validateLoginData, validateRegisterData};
+module.exports = {validateEditDocData, validateAddDocData, validateLoginData, validateRegisterData, validateComment};

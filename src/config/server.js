@@ -1,17 +1,19 @@
 const express = require('express')
 const dotenv = require('dotenv');
-const app = express()
+const app = express();
 const path = require('node:path');
 const mainRouter = require(path.join(__dirname, '..', 'routes', 'mainRouter'));
 const adminRouter = require(path.join(__dirname, '..', 'routes', 'adminRouter'));
 const apiRouter = require(path.join(__dirname, '..', 'routes', 'apiRouter'));
+const commentRouter = require(path.join(__dirname, '..', 'routes', 'commentRouter'));
 const authRouter = require(path.join(__dirname, '..', 'routes', 'authRouter'));
 const bodyParser = require('body-parser');
+const setupHelmet = require('./helmet');
 const logger = require(path.join(__dirname,'..', 'middlewares', 'logger'));
 const ensureDbConnection = require(path.join(__dirname,'..', 'middlewares', 'dbConnectionMiddleware'));
 const authMiddleware = require(path.join(__dirname, '..', 'middlewares', 'authMiddleware'));
 const errorHandler = require(path.join(__dirname,'..', 'middlewares', 'errorHandler'));
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
 
 dotenv.config({ path: path.join(__dirname, '..', '..', '.env') });
@@ -29,15 +31,16 @@ app.use(bodyParser.urlencoded({
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '..','views'));
 
+
+
+setupHelmet(app);
 app.use(ensureDbConnection);
 app.use(authMiddleware.signInUser);
 app.use(logger);
-app.get('/err', async (req, res, next) => {
-    next(new Error("cos sie stalo"))
-})
 app.use(mainRouter);
 app.use(apiRouter);
 app.use(authRouter)
+app.use(authMiddleware.requireLogin, commentRouter);
 app.use(authMiddleware.ensureAdminAccess ,adminRouter)
 
 app.use(errorHandler);

@@ -17,10 +17,14 @@ const signInUser = (req, res, next) => {
                 if (user?.is_banned === 0) {
                     res.locals.user = user;
                     next();
-                } else {
+                } else if (user?.is_banned === 1){
                     const error = new Error();
                     error.userMsg = 'Twoje konto jest zablokowane.';
                     next(error)
+                } else {
+                    console.log('Token is broken, user logged out');
+                    res.cookie('jwt', 'logoutValue', {maxAge: 1});
+                    res.redirect('/login');
                 }
             }
         });
@@ -63,4 +67,20 @@ const ensureAdminAccess = async  (req, res, next) => {
     }
 }
 
-module.exports = {signInUser, ensureDocumentAccess, ensureAdminAccess}
+const requireLogin = async  (req, res, next) => {
+    try {
+        const loggedUser = res.locals.user
+        if (loggedUser) {
+            next();
+        } else {
+            const err = new Error("Brak dostępu.");
+            err.userMsg = "Brak dostępu, zaloguj się aby rozwiązać ten problem.";
+
+            throw err;
+        }
+    } catch (e) {
+        next(e);
+    }
+}
+
+module.exports = {signInUser, ensureDocumentAccess, ensureAdminAccess, requireLogin}

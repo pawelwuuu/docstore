@@ -1,6 +1,7 @@
 const documentController = require('./modelControllers/documentCotroller');
 const categoryController = require('./modelControllers/categoryController');
 const documentCategoryController = require('./modelControllers/documentsCategoryController');
+const commentsController = require('./modelControllers/commentsController');
 const userController = require('./modelControllers/userController');
 const path = require('node:path');
 const _uniqueString = import('unique-string');
@@ -23,11 +24,24 @@ const homeGET = async (req, res, next) => {
 
 const documentGET = async (req, res, next) => {
     try {
-        const doc = await documentController.findDocumentByFiler({
-            id: req.params.id,
+        const doc = await documentController.getDocumentDetails(req.params.id);
+
+        const categoriesIds = doc.categories.map((category) => {
+            return category.category_id;
         });
 
-        res.render('document/document', {doc: doc[0]});
+        const sameUserDocs = await documentController.getUserDocuments(doc.user_id);
+        const sameCategoryDocs = await documentController.getDocumentsByCategoryIds(categoriesIds);
+        const comments = await commentsController.getCommentsByDocumentId(doc.id);
+
+        const sameUserDocsWoutThis = sameUserDocs.filter((document) => {
+            return document.id !== doc.id;
+        })
+        const sameCategoryDocsWoutThis = sameCategoryDocs.filter((document) => {
+            return document.id !== doc.id;
+        })
+
+        res.render('document/document', {doc, sameUserDocs: sameUserDocsWoutThis, sameCategoryDocs: sameCategoryDocsWoutThis, comments});
     } catch (e) {
         next(e)
     }
