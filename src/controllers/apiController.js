@@ -15,7 +15,7 @@ const documentsApi = async (req, res, next) => {
             page: req.query.page
         };
 
-        const filteredDocs = await documentController.findDocumentByFiler(filters)
+        const filteredDocs = await documentController.findDocumentByFilter(filters)
         const filteredDocsWoutFilename = filteredDocs.map((doc) => {
             const { filename, ...rest } = doc;
             return rest;
