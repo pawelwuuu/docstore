@@ -33,7 +33,7 @@ app.set('views', path.join(__dirname, '..','views'));
 
 
 
-// setupHelmet(app);
+setupHelmet(app);
 app.use(ensureDbConnection);
 app.use(authMiddleware.signInUser);
 app.use(logger);
