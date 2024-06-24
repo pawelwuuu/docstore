@@ -32,6 +32,16 @@ const createDocument = async (document, categoriesIds) => {
     }
 };
 
+const getDocumentsCount = async () => {
+    try {
+        const dbResult = await db('documents').count('* as documents_count').first();
+
+        return dbResult.documents_count;
+    } catch (e) {
+        throw e;
+    }
+}
+
 const findAllDocuments = async () => {
     try {
         return db('documents').select('*');
@@ -135,51 +145,85 @@ async function getDocumentsByCategoryIds(categoryIds) {
 
 const findDocumentByFilter = async (_filter) => {
     try {
-         const filter = {
+        const filter = {
             id: _filter.id ? `${_filter.id}` : '%',
             title: _filter.title ? `%${_filter.title}%` : '%',
             description: _filter.description ? `%${_filter.description}%` : '%',
             author: _filter.author ? `${_filter.author}%` : '%',
             uploadedBy: _filter.uploadedBy ? `${_filter.uploadedBy}%` : '%',
             uploadedAt: _filter.uploadedAt ? `%${_filter.uploadedAt}%` : '%',
+            categories: _filter.categories || [],
             orderBy: _filter.orderBy || 'uploaded_at',
             orderType: _filter.orderType || 'asc',
             perPage: parseInt(_filter.perPage) || -1,
             page: parseInt(_filter.page) || 1
+        };
+
+        let query = db('documents')
+            .select('documents.*', 'users.username')
+            .join('users', 'users.id', 'documents.user_id')
+            .whereLike('documents.id', filter.id)
+            .whereILike('uploaded_at', filter.uploadedAt)
+            .whereILike('title', filter.title)
+            .whereILike('description', filter.description)
+            .whereILike('author', filter.author)
+            .whereILike('users.username', filter.uploadedBy);
+
+        if (filter.categories.length > 0) {
+            query.whereExists(function() {
+                this.select('*')
+                    .from('document_category')
+                    .whereRaw('documents.id = document_category.document_id')
+                    .whereIn('document_category.category_id', filter.categories);
+            });
         }
 
-        let filteredDocs;
+        let totalQuery = query.clone(); // Clone the query for getting total count
+
         if (filter.perPage === -1) {
-            filteredDocs = await db('documents').select('documents.*', 'users.username', 'users.id')
-                .join('users', 'users.id', 'documents.user_id')
-                .whereLike('documents.id', filter.id)
-                .whereILike('uploaded_at', filter.uploadedAt)
-                .whereILike('title', filter.title)
-                .whereILike('description', filter.description)
-                .whereILike('author', filter.author)
-                .whereILike('users.username', filter.uploadedBy)
-                .orderBy(filter.orderBy, filter.orderType);
-        } else if (filter.perPage > 0) {
-            filteredDocs = await db('documents').select('documents.*','users.username')
-                .join('users', 'users.id', 'documents.user_id')
-                .whereILike('title', filter.title)
-                .whereILike('description', filter.description)
-                .whereILike('author', filter.author)
-                .whereILike('users.username', filter.uploadedBy)
-                .whereLike('documents.id', filter.id)
-                .whereLike('uploaded_at', filter.uploadedAt)
-                .orderBy(filter.orderBy, filter.orderType)
-                .offset(getOffset(filter.perPage, filter.page))
-                .limit(filter.perPage);
-        } else {
-            throw new Error("API error, per.page less than 0 or other incorrect data.")
-        }
+            const filteredDocs = await query.orderBy(filter.orderBy, filter.orderType);
 
-        return filteredDocs;
+            // Fetch categories separately for each document
+            for (let doc of filteredDocs) {
+                const categories = await db('document_category')
+                    .select('categories.category_name')
+                    .join('categories', 'document_category.category_id', 'categories.id')
+                    .where('document_category.document_id', doc.id);
+
+                doc.categories = categories.map(cat => cat.category_name);
+            }
+
+            filteredDocs.totalDocuments = filteredDocs.length;
+            return filteredDocs;
+        } else if (filter.perPage > 0) {
+            const offset = getOffset(filter.perPage, filter.page);
+            const filteredDocs = await query
+                .orderBy(filter.orderBy, filter.orderType)
+                .offset(offset)
+                .limit(filter.perPage);
+
+            // Fetch categories separately for each document
+            for (let doc of filteredDocs) {
+                const categories = await db('document_category')
+                    .select('categories.category_name')
+                    .join('categories', 'document_category.category_id', 'categories.id')
+                    .where('document_category.document_id', doc.id);
+
+                doc.categories = categories.map(cat => cat.category_name);
+            }
+
+            // Get total count using the cloned query
+            const totalDocuments = await totalQuery.count('documents.id as total').first();
+            filteredDocs.totalDocuments = totalDocuments.total;
+
+            return filteredDocs;
+        } else {
+            throw new Error("API error, perPage less than 0 or other incorrect data.");
+        }
     } catch (e) {
         throw e;
     }
-}
+};
 
 const updateDocument = async (document, id, categoriesIds) => {
     try {
@@ -219,5 +263,9 @@ const deleteDocument = async (id) => {
     }
 };
 
-module.exports = {createDocument, findAllDocuments, findDocumentByID, updateDocument, deleteDocument, findDocumentByFiler: findDocumentByFilter,
-    getUserDocuments, getDocumentDetails, getDocumentsByCategoryIds};
+const closeConnection =async () => {
+    await db.destroy();
+}
+
+module.exports = {closeConnection, createDocument, findAllDocuments, findDocumentByID, updateDocument, deleteDocument, findDocumentByFilter,
+    getUserDocuments, getDocumentDetails, getDocumentsByCategoryIds, getDocumentsCount};

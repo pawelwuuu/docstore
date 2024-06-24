@@ -1,6 +1,7 @@
 const knex = require('knex')
 const knexConfig = require("../knexfile");
-const db = knex(knexConfig.development);
+let env = process.env.NODE_ENV || 'development';
+const db = knex(knexConfig[env.trim()]);
 
 async function runSeeds() {
     try {

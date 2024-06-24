@@ -30,7 +30,12 @@ const registerPost = async (req, res, next) => {
                     password: await passwordOperations.hashPassword(password)
                 });
 
-            res.cookie('jwt', await createToken(userId[0]), {httpOnly:true, maxAge: parseInt(process.env.JWT_EXPIRE_TIME) * 1000 || 86400000});
+            res.cookie('jwt', await createToken(userId[0]),
+                {
+                    httpOnly:true,
+                    maxAge: parseInt(process.env.JWT_EXPIRE_TIME) * 1000 || 86400000,
+                    sameSite: 'Strict'
+                });
             res.status(201).json({
                 user: userId[0],
             })
@@ -60,7 +65,12 @@ const loginPost = async (req, res, next) => {
         if (validateResult === true) {
             const user = await userController.findUserByLogin(email);
 
-            res.cookie('jwt', await createToken(user.id), {httpOnly:true, maxAge: parseInt(process.env.JWT_EXPIRE_TIME) * 1000 || 86400000});
+            res.cookie('jwt', await createToken(user.id),
+                {
+                    httpOnly:true,
+                    maxAge: parseInt(process.env.JWT_EXPIRE_TIME) * 1000 || 86400000,
+                    sameSite: 'Strict'
+                });
             res.status(201).json({
                 user: user.id,
             })

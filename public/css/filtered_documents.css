@@ -7,7 +7,6 @@ body {
 
 .main-content {
     display: flex;
-    justify-content: space-between;
     max-width: 90%;
     margin: 20px auto;
     background-color: #fff;
@@ -17,7 +16,12 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.main-content h3 {
+.search-results {
+    width: 70%;
+    padding-right: 20px;
+}
+
+.search-results h3 {
     margin-top: 0;
     font-size: 1.8em;
     color: #333;
@@ -25,7 +29,6 @@ body {
 
 .documents-list {
     margin-top: 20px;
-    width: 100%;
 }
 
 .document-item {
@@ -53,22 +56,37 @@ body {
     background-color: #0056b3;
 }
 
-.search-results {
-    width: 75%;
+.pagination {
+    margin-top: 20px;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #007bff;
+    transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pagination a.active {
+    background-color: #0056b3;
+    color: #fff;
 }
 
 .search-filter {
-    width: 25%;
-    margin-left: 20px;
-    background-color: #f9f9f9;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 30%;
 }
 
 .searcher {
-    margin-bottom: 20px;
+    width: 100%;
 }
 
 .searcher h4 {
@@ -90,11 +108,10 @@ body {
 
 .search-input input,
 .search-input select {
-    width: calc(100% - 22px);
+    width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 3px;
-    box-sizing: border-box;
 }
 
 button[type="submit"] {

@@ -17,6 +17,20 @@ module.exports = {
     },
   }
   ,
+  test: {
+    client: 'mysql',
+    connection: {
+      host: 'localhost',
+      user: 'root',
+      password: process.env.DB_PASSWORD || '',
+      database: 'docstore_test',
+      pool: {
+        min: 2,    // minimalna liczba połączeń w puli
+        max: 10    // maksymalna liczba połączeń w puli
+      },
+      acquireConnectionTimeout: 10000
+    },
+  },
 
   staging: {
     client: 'postgresql',

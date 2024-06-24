@@ -8,7 +8,7 @@ const apiRouter = require(path.join(__dirname, '..', 'routes', 'apiRouter'));
 const commentRouter = require(path.join(__dirname, '..', 'routes', 'commentRouter'));
 const authRouter = require(path.join(__dirname, '..', 'routes', 'authRouter'));
 const bodyParser = require('body-parser');
-const setupHelmet = require('./helmet');
+// const setupHelmet = require('./helmet');
 const logger = require(path.join(__dirname,'..', 'middlewares', 'logger'));
 const ensureDbConnection = require(path.join(__dirname,'..', 'middlewares', 'dbConnectionMiddleware'));
 const authMiddleware = require(path.join(__dirname, '..', 'middlewares', 'authMiddleware'));
@@ -33,7 +33,7 @@ app.set('views', path.join(__dirname, '..','views'));
 
 
 
-setupHelmet(app);
+// setupHelmet(app);
 app.use(ensureDbConnection);
 app.use(authMiddleware.signInUser);
 app.use(logger);

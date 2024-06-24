@@ -64,7 +64,7 @@ const getCommentsByDocumentId = async (documentId) => {
     try {
         return await db('comments')
             .where('comments.document_id', documentId)
-            .join('users', 'comments.user_id', 'users.id')
+            .leftJoin('users', 'comments.user_id', 'users.id')
             .select(
                 'comments.*',
                 'users.username'
@@ -74,5 +74,8 @@ const getCommentsByDocumentId = async (documentId) => {
     }
 }
 
+const closeConnection =async () => {
+    await db.destroy();
+}
 
-module.exports = {createComment, findAllComments, findCommentByID, updateComment, deleteComment, countUserDocumentComments, getCommentsByDocumentId};
+module.exports = {closeConnection, createComment, findAllComments, findCommentByID, updateComment, deleteComment, countUserDocumentComments, getCommentsByDocumentId};

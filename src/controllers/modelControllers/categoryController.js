@@ -63,4 +63,8 @@ const getCategoriesDocCount = async () => {
     }
 }
 
-module.exports = {createCategory, findAllCategories, findCategoryByID, updateCategory, deleteCategory, getCategoriesDocCount};
+const closeConnection =async () => {
+    await db.destroy();
+}
+
+module.exports = {createCategory, findAllCategories, findCategoryByID, updateCategory, deleteCategory, getCategoriesDocCount, closeConnection};

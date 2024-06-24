@@ -23,6 +23,8 @@
                 </div>
             </a>
         <% }); %>
+
+        <p><a href="/filter-documents">Wszystkie dokumenty</a></p>
     </div>
 
     <div class="right">
@@ -42,6 +44,15 @@
 
             <label for="uploadedAtInput">Data przesłania</label>
             <input id="uploadedAtInput" name="uploadedAt" type="date" class="searchInput">
+
+            <label for="categories">Kategorie</label>
+            <div id="categories">
+                <% categories.forEach(category => { %>
+                    <label>
+                        <input type="checkbox" name="categories" value="<%= category.id %>"> <%= category.category_name %>
+                    </label>
+                <% }); %>
+            </div>
 
             <label for="orderBySelect">Sortuj według</label>
             <select id="orderBySelect" name="orderBy" class="searchInput">

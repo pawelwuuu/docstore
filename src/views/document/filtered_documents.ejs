@@ -12,19 +12,57 @@
 
 <div class="main-content">
     <div class="search-results">
-        <h3>Filtrowane Dokumenty</h3>
+        <h3>Dokumenty</h3>
         <div class="documents-list">
+
+            <% if (totalPages > 1) { %>
+                <div class="pagination">
+                    <% if (currentPage > 1) { %>
+                        <a href="?page=<%= currentPage - 1 %>&perPage=<%= perPage %>">Poprzednia</a>
+                    <% } %>
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                        <a href="?page=<%= i %>&perPage=<%= perPage %>"
+                           class="<%= i === currentPage ? 'active' : '' %>"><%= i %></a>
+                    <% } %>
+                    <% if (currentPage < totalPages) { %>
+                        <a href="?page=<%= currentPage + 1 %>&perPage=<%= perPage %>">Następna</a>
+                    <% } %>
+                </div>
+            <% } %>
+
             <% if (documents.length > 0) { %>
                 <% documents.forEach(doc => { %>
                     <div class="document-item">
                         <p><strong>Tytuł:</strong> <%= doc.title %></p>
                         <p><strong>Autor:</strong> <%= doc.author %></p>
+                        <p><strong>Kategoria</strong>:
+                            <% doc.categories.forEach((category, index) => { %>
+                                <%= index !== doc.categories.length - 1 ? `${category}, ` : category %>
+                            <% }) %>
+                        </p>
+
                         <p><strong>Dodał:</strong> <%= doc.username %></p>
                         <p><strong>Data dodania:</strong> <%= new Date(doc.uploaded_at).toLocaleDateString() %></p>
                         <p><strong>Rozszerzenie pliku:</strong> <%= doc.file_ext %></p>
-                        <a href="/document/<%= doc.id %>"><button>Więcej</button></a>
+                        <a href="/document/<%= doc.id %>">
+                            <button>Więcej</button>
+                        </a>
                     </div>
                 <% }); %>
+                <% if (totalPages > 1 && documents.length > 5) { %>
+                    <div class="pagination">
+                        <% if (currentPage > 1) { %>
+                            <a href="?page=<%= currentPage - 1 %>&perPage=<%= perPage %>">Poprzednia</a>
+                        <% } %>
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                            <a href="?page=<%= i %>&perPage=<%= perPage %>"
+                               class="<%= i === currentPage ? 'active' : '' %>"><%= i %></a>
+                        <% } %>
+                        <% if (currentPage < totalPages) { %>
+                            <a href="?page=<%= currentPage + 1 %>&perPage=<%= perPage %>">Następna</a>
+                        <% } %>
+                    </div>
+                <% } %>
             <% } else { %>
                 <p>Brak dokumentów spełniających podane kryteria.</p>
             <% } %>
@@ -58,6 +96,18 @@
                 <div class="search-input">
                     <label for="uploadedAtInput">Data przesłania</label>
                     <input id="uploadedAtInput" name="uploadedAt" type="date">
+                </div>
+
+                <div class="search-input">
+                    <label for="categories">Kategorie</label>
+                    <div id="categories">
+                        <% categories.forEach(category => { %>
+                            <label>
+                                <input type="checkbox" name="categories"
+                                       value="<%= category.id %>"> <%= category.category_name %>
+                            </label>
+                        <% }); %>
+                    </div>
                 </div>
 
                 <div class="search-input">

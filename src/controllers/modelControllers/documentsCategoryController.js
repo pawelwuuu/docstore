@@ -60,4 +60,8 @@ const deleteDocumentCategory = async (documentId, categoryId) => {
     }
 };
 
-module.exports = {createDocumentCategory, findAllDocumentCategories, findDocumentCategory, updateDocumentCategory, deleteDocumentCategory};
+const closeConnection =async () => {
+    await db.destroy();
+}
+
+module.exports = {closeConnection, createDocumentCategory, findAllDocumentCategories, findDocumentCategory, updateDocumentCategory, deleteDocumentCategory};

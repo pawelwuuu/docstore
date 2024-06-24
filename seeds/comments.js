@@ -13,6 +13,12 @@ exports.seed = function(knex) {
             content: faker.lorem.paragraph(),
           });
         }
+
+          comments.push({
+              user_id: 1000,
+              document_id: 1001,
+              content: 'przykladowy tekst niedozwolony',
+          })
         return knex('comments').insert(comments);
       });
 };

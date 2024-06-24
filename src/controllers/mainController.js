@@ -10,13 +10,22 @@ const filleOperations = require('../utils/fileOperations');
 
 const homeGET = async (req, res, next) => {
     try {
-        const documents = await documentController.findDocumentByFiler({
+        const documents = await documentController.findDocumentByFilter({
             perPage: 5,
             page: 1,
             orderType: 'desc'
+        });
+
+        const documentsWithShortenedDesc = documents.map(doc => {
+            const obj = {...doc};
+            obj.description = `${obj.description.substring(0, 800)}...`;
+
+            return obj;
         })
 
-        res.render('home', {documents: documents});
+        const categories = await categoryController.findAllCategories();
+
+        res.render('home', {documents: documentsWithShortenedDesc, categories});
     } catch (e) {
         next(e)
     }
@@ -193,26 +202,45 @@ const userDELETE = async (req, res, next) => {
 
 const filterDocuments = async (req, res, next) => {
     try {
+        const currentPage = parseInt(req.query.page) || 1;
+        const perPage = parseInt(req.query.perPage) || 10;
+
+        const filterCategories = Array.isArray(req.query.categories)
+            ? req.query.categories
+            : typeof req.query.categories === 'string'
+                ? [req.query.categories]
+                : [];
+
         const filters = {
-            id: req.query.id,
-            title: req.query.title,
-            description: req.query.description,
-            author: req.query.author,
-            uploadedBy: req.query.uploadedBy,
-            uploadedAt: req.query.uploadedAt,
-            orderBy: req.query.orderBy,
-            orderType: req.query.orderType,
-            perPage: req.query.perPage,
-            page: req.query.page
+            id: req.query.id || '%',
+            title: req.query.title ? `%${req.query.title}%` : '%',
+            description: req.query.description ? `%${req.query.description}%` : '%',
+            author: req.query.author ? `%${req.query.author}%` : '%',
+            uploadedBy: req.query.uploadedBy ? `%${req.query.uploadedBy}%` : '%',
+            uploadedAt: req.query.uploadedAt ? `%${req.query.uploadedAt}%` : '%',
+            categories: filterCategories,
+            orderBy: req.query.orderBy || 'uploaded_at',
+            orderType: req.query.orderType || 'asc',
+            perPage,
+            page: currentPage
         };
 
-        const filteredDocs = await documentController.findDocumentByFiler(filters);
+        const filteredDocs = await documentController.findDocumentByFilter(filters);
+        const categories = await categoryController.findAllCategories();
+        const totalPages = Math.ceil(filteredDocs.totalDocuments / filters.perPage);
 
-        res.render('document/filtered_documents', {documents: filteredDocs})
+        res.render('document/filtered_documents', {
+            documents: filteredDocs,
+            perPage: filters.perPage,
+            currentPage,
+            totalPages,
+            categories
+        });
     } catch (e) {
         next(e);
     }
 }
+
 
 module.exports = {homeGET, documentGET, addDocumentGET, addDocumentPOST, documentDELETE, editDocumentGET,
     editDocumentPOST, userDELETE, filterDocuments}
