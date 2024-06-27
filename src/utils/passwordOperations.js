@@ -24,13 +24,13 @@ const validatePassword = async (p) => {
         return false;
     }
 
-    if (p.search(/[a-z]/i) < 0) { //One small letter
+    if (p.search(/[a-z]/i) < 0) {
         return false;
     }
-    if (p.search(/[0-9]/) < 0) { //One digit
+    if (p.search(/[0-9]/) < 0) {
         return false;
     }
-    if (p.search(/[A-Z]/) < 0) { //One large letter
+    if (p.search(/[A-Z]/) < 0) {
         return false;
     }
 

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil użytkownika</title>
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+</head>
+<body>
+
+<%- include('partials/header.ejs') %>
+
+<div class="profile-container">
+    <div class="profile-details">
+        <h2>Profil użytkownika: <%= user.username %></h2>
+        <p><strong>Email:</strong> <%= user.email %></p>
+        <p><strong>Zarejestrowano:</strong> <%= new Date(user.created_at).toLocaleDateString() %></p>
+        <form method="POST" action="/delete-profile/<%= user.id %>" class="delete-form" onsubmit="return confirm('Czy na pewno chcesz usunąć konto?');">
+            <button type="submit" class="delete-button">Usuń</button>
+        </form>
+    </div>
+
+    <div class="user-documents">
+        <h3>Twoje dokumenty</h3>
+        <% if (documents.length > 0) { %>
+            <% documents.forEach(doc => { %>
+                <div class="document-item">
+                    <p><strong>Tytuł:</strong> <%= doc.title %></p>
+                    <p><strong>Autor:</strong> <%= doc.author %></p>
+                    <p><strong>Data dodania:</strong> <%= new Date(doc.uploaded_at).toLocaleDateString() %></p>
+                    <a href="/document/<%= doc.id %>" class="document-link">Więcej</a>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p>Brak dokumentów.</p>
+        <% } %>
+    </div>
+</div>
+
+<%- include('partials/footer.ejs') %>
+
+</body>
+</html>

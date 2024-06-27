@@ -106,3 +106,74 @@ hr {
 .right button[type="submit"]:hover {
     background-color: #0056b3;
 }
+
+.file-extension-cards {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: -20px;
+    padding-bottom: 20px;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.file-extension-card {
+    flex: 1;
+    max-width: calc(25% - 20px);
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+
+.file-extension-card:last-child {
+    margin-right: 0;
+}
+
+.file-extension-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.file-extension-card h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.file-extension-section h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+    text-align: center;
+    color: #333;
+}
+
+.file-extension-card p {
+    margin-top: 5px;
+    color: #666;
+}
+
+.file-extension-section {
+    margin: 20px 20px 0 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.left button {
+    background-color: #007bff;
+    color: #fff;
+    width: 100%;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}

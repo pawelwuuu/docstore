@@ -6,6 +6,10 @@ const apiController = require(path.join(__dirname, '..', 'controllers', 'apiCont
 
 apiRouter.get('/api/documents', apiController.documentsApi);
 
-apiRouter.get('/api/documents/:id', apiController.documentByIdApi)
+apiRouter.get('/api/document/:id', apiController.documentByIdApi);
+
+apiRouter.get('/api/categories', apiController.categoriesApi);
+
+apiRouter.get('/api/categories/:id', apiController.categoryByIdApi);
 
 module.exports = apiRouter

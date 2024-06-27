@@ -80,7 +80,8 @@ async function getDocumentDetails(documentId) {
                 .first();
 
             if (!doc) {
-                throw new Error(`Dokument nie istnieje`);
+                const err = new Error(`Document ${documentId} not found.`);
+                err.userMsg = 'Dokument nie istnieje.'
             }
 
             const categories = await trx('document_category')
@@ -143,6 +144,14 @@ async function getDocumentsByCategoryIds(categoryIds) {
     }
 }
 
+const documentExtensionsCount = () => {
+    try {
+        return db('documents').select('file_ext').count('file_ext as count').groupBy('file_ext').orderBy('count', 'desc');
+    } catch (e) {
+        throw e;
+    }
+}
+
 const findDocumentByFilter = async (_filter) => {
     try {
         const filter = {
@@ -178,12 +187,11 @@ const findDocumentByFilter = async (_filter) => {
             });
         }
 
-        let totalQuery = query.clone(); // Clone the query for getting total count
+        let totalQuery = query.clone();
 
         if (filter.perPage === -1) {
             const filteredDocs = await query.orderBy(filter.orderBy, filter.orderType);
 
-            // Fetch categories separately for each document
             for (let doc of filteredDocs) {
                 const categories = await db('document_category')
                     .select('categories.category_name')
@@ -202,7 +210,6 @@ const findDocumentByFilter = async (_filter) => {
                 .offset(offset)
                 .limit(filter.perPage);
 
-            // Fetch categories separately for each document
             for (let doc of filteredDocs) {
                 const categories = await db('document_category')
                     .select('categories.category_name')
@@ -212,7 +219,6 @@ const findDocumentByFilter = async (_filter) => {
                 doc.categories = categories.map(cat => cat.category_name);
             }
 
-            // Get total count using the cloned query
             const totalDocuments = await totalQuery.count('documents.id as total').first();
             filteredDocs.totalDocuments = totalDocuments.total;
 
@@ -268,4 +274,4 @@ const closeConnection =async () => {
 }
 
 module.exports = {closeConnection, createDocument, findAllDocuments, findDocumentByID, updateDocument, deleteDocument, findDocumentByFilter,
-    getUserDocuments, getDocumentDetails, getDocumentsByCategoryIds, getDocumentsCount};
+    getUserDocuments, getDocumentDetails, getDocumentsByCategoryIds, getDocumentsCount, documentExtensionsCount};

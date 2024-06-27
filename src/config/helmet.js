@@ -1,14 +1,14 @@
 const helmet = require('helmet');
 
 const helmetConfig = (app) => {
-    app.use(helmet.contentSecurityPolicy({
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'"],
-            objectSrc: ["'none'"],
-            upgradeInsecureRequests: [],
-        },
-    }));
+    // app.use(helmet.contentSecurityPolicy({
+    //     directives: {
+    //         defaultSrc: ["'self'"],
+    //         scriptSrc: ["'self'"],
+    //         objectSrc: ["'none'"],
+    //         upgradeInsecureRequests: [],
+    //     },
+    // }));
 
     app.use(helmet.frameguard({ action: 'deny' }));
 

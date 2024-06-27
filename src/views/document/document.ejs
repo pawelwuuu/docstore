@@ -65,30 +65,46 @@
     </main>
 
     <aside class="related-documents">
-        <section class="same-category">
-            <h3>Dokumenty w tej samej kategorii</h3>
-            <% sameCategoryDocs?.forEach(doc => { %>
-                <div class="related-document">
-                    <a href="/document/<%= doc.id %>">
-                        <p><strong>Tytuł:</strong> <%= doc.title %></p>
-                        <p><strong>Autor:</strong> <%= doc.author %></p>
-                    </a>
-                </div>
-            <% }); %>
-        </section>
+        <% if (!sameCategoryDocs && !sameUserDocs) { %>
+            <p>Nie ma innych dokumentów.</p>
+        <% } else { %>
+            <section class="same-category">
+                <h3>Dokumenty w tej samej kategorii</h3>
+                <% if (sameCategoryDocs && sameCategoryDocs.length > 0) { %>
+                    <% sameCategoryDocs.forEach(doc => { %>
+                        <hr>
+                        <div class="related-document">
+                            <a href="/document/<%= doc.id %>">
+                                <p><strong>Tytuł:</strong> <%= doc.title %></p>
+                                <p><strong>Autor:</strong> <%= doc.author %></p>
+                            </a>
+                        </div>
 
-        <section class="same-user">
-            <h3>Dokumenty od tego samego użytkownika</h3>
-            <% sameUserDocs?.forEach(doc => { %>
-                <div class="related-document">
-                    <a href="/document/<%= doc.id %>">
-                        <p><strong>Tytuł:</strong> <%= doc.title %></p>
-                        <p><strong>Autor:</strong> <%= doc.author %></p>
-                    </a>
-                </div>
-            <% }); %>
-        </section>
+                    <% }); %>
+                <% } else { %>
+                    <p>Brak dokumentów w tej samej kategorii.</p>
+                <% } %>
+            </section>
+
+            <section class="same-user">
+                <h3>Dokumenty od tego samego użytkownika</h3>
+                <% if (sameUserDocs && sameUserDocs.length > 0) { %>
+                    <% sameUserDocs.forEach(doc => { %>
+                        <hr>
+                        <div class="related-document">
+                            <a href="/document/<%= doc.id %>">
+                                <p><strong>Tytuł:</strong> <%= doc.title %></p>
+                                <p><strong>Autor:</strong> <%= doc.author %></p>
+                            </a>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>Brak dokumentów od tego samego użytkownika.</p>
+                <% } %>
+            </section>
+        <% } %>
     </aside>
+
 </div>
 
 <%- include('../partials/popup.ejs') %>

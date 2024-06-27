@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DocStore</title>
@@ -24,7 +25,7 @@
                     </a>
                 <% } %>
 
-                <a href="/profile" class="header-button">
+                <a href="/profile/<%= user.id %>" class="header-button">
                     Profil
                 </a>
                 <a href="/add-document" class="header-button">

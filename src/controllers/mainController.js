@@ -16,6 +16,8 @@ const homeGET = async (req, res, next) => {
             orderType: 'desc'
         });
 
+        const documentsExtCount = await documentController.documentExtensionsCount();
+
         const documentsWithShortenedDesc = documents.map(doc => {
             const obj = {...doc};
             obj.description = `${obj.description.substring(0, 800)}...`;
@@ -25,7 +27,7 @@ const homeGET = async (req, res, next) => {
 
         const categories = await categoryController.findAllCategories();
 
-        res.render('home', {documents: documentsWithShortenedDesc, categories});
+        res.render('home', {documents: documentsWithShortenedDesc, categories, fileExtensions: documentsExtCount.slice(0,4)});
     } catch (e) {
         next(e)
     }
@@ -156,7 +158,7 @@ const editDocumentPOST = async (req,res,next) => {
             let uniqueFilename
             if (req.files?.documentFile) {
                 const uniqueString = await _uniqueString;
-                const uniqueFilename = `${uniqueString.default()}.${validationResult.fileExtension}`;
+                uniqueFilename = `${uniqueString.default()}.${validationResult.fileExtension}`;
                 await uploadedFile.mv(path.join(__dirname, '..', '..', 'public', 'uploads', uniqueFilename));
 
                 await filleOperations.moveFile(

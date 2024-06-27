@@ -9,6 +9,18 @@
 <body>
 <%- include('partials/header.ejs') %>
 
+<div class="file-extension-section">
+    <h2>Najpopularniejsze typy dokumentów w naszym serwisie</h2>
+    <div class="file-extension-cards">
+        <% fileExtensions.forEach(ext => { %>
+            <div class="file-extension-card">
+                <h3><%= ext.file_ext.toUpperCase() %></h3>
+                <p><%= ext.count %></p>
+            </div>
+        <% }); %>
+    </div>
+</div>
+
 <div class="container">
     <div class="left">
         <h3>Ostatnio dodane</h3>
@@ -24,7 +36,7 @@
             </a>
         <% }); %>
 
-        <p><a href="/filter-documents">Wszystkie dokumenty</a></p>
+        <a href="/filter-documents"><button>Wszystkie dokumenty</button></a>
     </div>
 
     <div class="right">

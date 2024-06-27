@@ -5,6 +5,7 @@ const path = require('node:path');
 const mainRouter = require(path.join(__dirname, '..', 'routes', 'mainRouter'));
 const adminRouter = require(path.join(__dirname, '..', 'routes', 'adminRouter'));
 const apiRouter = require(path.join(__dirname, '..', 'routes', 'apiRouter'));
+const profileRouter = require(path.join(__dirname, '..', 'routes', 'profileRouter'));
 const commentRouter = require(path.join(__dirname, '..', 'routes', 'commentRouter'));
 const authRouter = require(path.join(__dirname, '..', 'routes', 'authRouter'));
 const bodyParser = require('body-parser');
@@ -39,9 +40,10 @@ app.use(authMiddleware.signInUser);
 app.use(logger);
 app.use(mainRouter);
 app.use(apiRouter);
-app.use(authRouter)
+app.use(authRouter);
+app.use(profileRouter);
 app.use(authMiddleware.requireLogin, commentRouter);
-app.use(authMiddleware.ensureAdminAccess ,adminRouter)
+app.use(authMiddleware.ensureAdminAccess ,adminRouter);
 
 app.use(errorHandler);
 

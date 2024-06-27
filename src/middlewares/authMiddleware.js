@@ -36,9 +36,29 @@ const signInUser = (req, res, next) => {
 
 const ensureDocumentAccess = async (req, res, next) => {
     try {
+        console.log(req.params)
+
         const documentId = req.params.id;
         const document = await documentController.findDocumentByID(documentId);
         if (res.locals.user && res.locals.user.id === document.user_id || res.locals.user.is_admin === 1) {
+            next()
+        } else {
+            const err = new Error("Brak dostępu.");
+            err.userMsg = "Brak dostępu, zaloguj się aby rozwiązać ten problem.";
+
+            throw err;
+        }
+    } catch (e) {
+        next(e);
+    }
+}
+
+const ensureProfileAccess = async (req, res, next) => {
+    try {
+        const profileId = req.params.id;
+        const user = await userController.findUserByID(profileId);
+
+        if (res.locals.user && res.locals.user.id === user.id || res.locals.user.is_admin === 1) {
             next()
         } else {
             const err = new Error("Brak dostępu.");
@@ -83,4 +103,4 @@ const requireLogin = async  (req, res, next) => {
     }
 }
 
-module.exports = {signInUser, ensureDocumentAccess, ensureAdminAccess, requireLogin}
+module.exports = {signInUser, ensureDocumentAccess, ensureAdminAccess, requireLogin, ensureProfileAccess}
