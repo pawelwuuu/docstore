@@ -160,7 +160,8 @@ const findDocumentByFilter = async (_filter) => {
             description: _filter.description ? `%${_filter.description}%` : '%',
             author: _filter.author ? `${_filter.author}%` : '%',
             uploadedBy: _filter.uploadedBy ? `${_filter.uploadedBy}%` : '%',
-            uploadedAt: _filter.uploadedAt ? `%${_filter.uploadedAt}%` : '%',
+            uploadedFrom: _filter.uploadedFrom || '2020-06-29 05:30:55',
+            uploadedTo: _filter.uploadedTo || '2063-06-29 05:30:55',
             categories: _filter.categories || [],
             orderBy: _filter.orderBy || 'uploaded_at',
             orderType: _filter.orderType || 'asc',
@@ -168,15 +169,23 @@ const findDocumentByFilter = async (_filter) => {
             page: parseInt(_filter.page) || 1
         };
 
+
+
         let query = db('documents')
             .select('documents.*', 'users.username')
             .join('users', 'users.id', 'documents.user_id')
             .whereLike('documents.id', filter.id)
-            .whereILike('uploaded_at', filter.uploadedAt)
+            .whereBetween('documents.uploaded_at', [filter.uploadedFrom, filter.uploadedTo])
+            // .where('documents.uploaded_at', '>', filter.uploadedFrom)
+            // .where('documents.uploaded_at', '<=', filter.uploadedTo)
             .whereILike('title', filter.title)
             .whereILike('description', filter.description)
             .whereILike('author', filter.author)
             .whereILike('users.username', filter.uploadedBy);
+
+        console.log(filter);
+        console.log(query.toString());
+
 
         if (filter.categories.length > 0) {
             query.whereExists(function() {

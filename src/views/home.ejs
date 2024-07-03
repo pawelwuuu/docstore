@@ -54,10 +54,12 @@
             <label for="uploadedByInput">Przesłał</label>
             <input id="uploadedByInput" name="uploadedBy" type="text" class="searchInput">
 
-            <label for="uploadedAtInput">Data przesłania</label>
-            <input id="uploadedAtInput" name="uploadedAt" type="date" class="searchInput">
+            <p>Data przesłania:</p>
+            <label for="uploadedFromInput">Od:</label><input id="uploadedFromInput" name="uploadedFrom" type="date" class="searchInput">
 
-            <label for="categories">Kategorie</label>
+            <label for="uploadedToInput">Do:</label><input id="uploadedToInput" name="uploadedTo" type="date" class="searchInput">
+
+            <p>Kategorie</p>
             <div id="categories">
                 <% categories.forEach(category => { %>
                     <label>

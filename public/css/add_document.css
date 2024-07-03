@@ -26,7 +26,6 @@ body {
 }
 
 .add-document-form label {
-    display: block;
     margin-bottom: 5px;
     font-weight: bold;
 }
@@ -38,12 +37,8 @@ body {
 .add-document-form input[type="file"],
 .add-document-form button,
 .add-document-form input[type="checkbox"] {
-    width: 100%;
     padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
     border-radius: 3px;
-    box-sizing: border-box;
 }
 
 .add-document-form textarea {
@@ -51,7 +46,7 @@ body {
 }
 
 .add-document-form .category-checkbox {
-    margin-bottom: 5px;
+    margin:  10px 0 10px 20px;
 }
 
 .add-document-form button {
